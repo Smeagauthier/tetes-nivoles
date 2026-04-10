@@ -1,0 +1,51 @@
+export const members = [
+    {
+        id: 1,
+        name: "Sophie Marlier",
+        role: "Comédienne",
+        bio: "Passionnée de poésie depuis l'enfance, Sophie porte les textes avec une douceur qui saisit le public dès les premiers mots.",
+        photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=500&fit=crop",
+    },
+    {
+        id: 2,
+        name: "Mickaël Crépin",
+        role: "Auteur & Comédien",
+        bio: "Professeur de lettres et âme littéraire de la troupe, Mickaël écrit les textes que les Têtes Nivoles portent à voix haute.",
+        photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop",
+    },
+    {
+        id: 3,
+        name: "Isabelle Fontaine",
+        role: "Comédienne",
+        bio: "Sa voix grave et posée donne aux vers une profondeur rare. Isabelle est sur scène depuis les débuts de la compagnie.",
+        photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop",
+    },
+    {
+        id: 4,
+        name: "Laurent Devos",
+        role: "Comédien",
+        bio: "Laurent apporte un souffle comique et chaleureux aux lectures. Son sens du rythme est un atout précieux sur scène.",
+        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop",
+    },
+    {
+        id: 5,
+        name: "Nathalie Rousseau",
+        role: "Comédienne",
+        bio: "Ancienne élève du conservatoire de Valenciennes, Nathalie mêle rigueur théâtrale et sensibilité poétique.",
+        photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop",
+    },
+    {
+        id: 6,
+        name: "Thomas Leblanc",
+        role: "Comédien",
+        bio: "Discret mais habité, Thomas laisse les mots prendre toute la place. Il rejoint la troupe en 2021.",
+        photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=500&fit=crop",
+    },
+    {
+        id: 7,
+        name: "Claire Vasseur",
+        role: "Comédienne & Mise en scène",
+        bio: "Claire orchestre les lectures avec un œil précis sur l'espace et le mouvement. Elle signe également la mise en scène.",
+        photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=500&fit=crop",
+    },
+];

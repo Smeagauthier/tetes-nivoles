@@ -1,7 +1,15 @@
-import Home from "./pages/Home";
+import Navbar from "./components/layout/Navbar";
+import Hero   from "./components/sections/Hero";
+import About  from "./components/sections/About";
+import Members  from "./components/sections/Members";
 
-function App() {
-    return <Home />;
+export default function App() {
+    return (
+        <>
+            <Navbar />
+            <Hero />
+            <About />
+            <Members />
+        </>
+    );
 }
-
-export default App;
