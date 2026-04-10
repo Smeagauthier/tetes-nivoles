@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+*{
+    margin : 0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+body, html{
+    height: 100%;
+}
+
+.swiper-pagination-bullet {
+    background: white;
+    opacity: 0.4;
+    width: 8px;
+    height: 8px;
+}
+
+.swiper-pagination-bullet-active {
+    opacity: 1;
+    width: 20px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
