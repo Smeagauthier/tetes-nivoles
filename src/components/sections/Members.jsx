@@ -2,8 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import { members } from "../../data/members";
-
+import { useMembers } from "../../hooks/useMembers";
 import "swiper/css";
 
 const COLORS = {
@@ -98,6 +97,10 @@ function MemberCard({ member, index }) {
 }
 
 export default function Members() {
+    const { members, loading, error } = useMembers();
+    if (loading) return null;
+    if (error)   return null;
+
     return (
         <section
             id="members"

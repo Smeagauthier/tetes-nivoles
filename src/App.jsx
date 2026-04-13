@@ -1,15 +1,12 @@
-import Navbar from "./components/layout/Navbar";
-import Hero   from "./components/sections/Hero";
-import About  from "./components/sections/About";
-import Members  from "./components/sections/Members";
+import { Routes, Route } from "react-router-dom";
+import Site from "./Site";
+import AdminApp from "./admin/AdminApp";
 
 export default function App() {
     return (
-        <>
-            <Navbar />
-            <Hero />
-            <About />
-            <Members />
-        </>
+        <Routes>
+            <Route path="/*"       element={<Site />} />
+            <Route path="/admin/*" element={<AdminApp />} />
+        </Routes>
     );
 }
