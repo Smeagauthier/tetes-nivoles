@@ -1,8 +1,9 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap');
 @import "tailwindcss";
 
-*{
-    margin : 0;
-    padding:0;
+
+*, *::before, *::after {
     box-sizing: border-box;
 }
 
@@ -27,9 +28,6 @@ body, html{
 html {
     scroll-behavior: smooth;
 }
-
-/* ── Google Font calligraphique ── */
-@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap');
 
 /* ── Ken Burns ── */
 @keyframes kenburns-1 {

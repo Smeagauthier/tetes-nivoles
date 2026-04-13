@@ -109,7 +109,7 @@ export default function Members() {
             className="flex flex-col items-center px-8 md:px-16"
         >
             {/* En-tête */}
-            <div className="w-full max-w-7xl flex flex-col gap-4">
+            <div className="w-full max-w-7xl flex flex-col gap-10 mb-0">
                 <motion.p
                     className="text-lg uppercase tracking-[0.4em] font-medium"
                     style={{ color: COLORS.gold }}
@@ -133,7 +133,7 @@ export default function Members() {
             </div>
 
             {/* ── Mobile : Swiper ── */}
-            <div className="w-full md:hidden">
+            <div className="w-full md:hidden mt-16">
                 <Swiper
                     modules={[Autoplay]}
                     slidesPerView={1.3}
@@ -152,7 +152,7 @@ export default function Members() {
             </div>
 
             {/* ── Desktop : grille 4+3 ── */}
-            <div className="hidden md:flex flex-col gap-15 w-full max-w-7xl">
+            <div className="hidden md:flex flex-col gap-16 w-full max-w-7xl mt-16">
 
                 {/* Ligne 1 : 4 cartes */}
                 <div className="grid grid-cols-4 gap-15">
