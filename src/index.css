@@ -20,6 +20,11 @@ select:-webkit-autofill {
     transition: background-color 9999s ease-out 0s;
 }
 
+.is-on-gold {
+    border-color: #070F2B !important;
+    color: #070F2B !important;
+}
+
 .swiper-pagination-bullet {
     background: white;
     opacity: 0.4;

@@ -82,7 +82,7 @@ w-full transition-all duration-500 border-b
 
 ${
                     isOnGoldSection
-                        ? "bg-white/60 backdrop-blur-md border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.25)]"
+                        ? "bg-white/20 backdrop-blur-md border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
                         : scrolled
                             ? "bg-white/20 backdrop-blur-md border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
                             : "bg-white/5 backdrop-blur-xs border-transparent"
