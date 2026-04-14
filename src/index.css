@@ -11,6 +11,15 @@ body, html{
     height: 100%;
 }
 
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #070F2B inset !important;
+    -webkit-text-fill-color: white !important;
+    caret-color: white;
+    transition: background-color 9999s ease-out 0s;
+}
+
 .swiper-pagination-bullet {
     background: white;
     opacity: 0.4;

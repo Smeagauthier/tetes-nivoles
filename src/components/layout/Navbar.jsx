@@ -1,12 +1,8 @@
 import { useState, useEffect } from "react";
-
-
 import SocialLink from "../ui/SocialLinks.jsx";
 import logo from "../../assets/images/logo-tn.png";
 import { NAV_LINKS, SOCIAL_LINKS } from "../../constants/navigation";
 import ButtonGold from "../ui/ButtonGold.jsx";
-
-
 
 // ─── NavLink ──────────────────────────────────────────────────────────────────
 
@@ -39,13 +35,33 @@ onMouseLeave={(e) => {
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 
 export default function Navbar() {
-    const [isOpen,   setIsOpen]   = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [isOnGoldSection, setIsOnGoldSection] = useState(false);
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 30);
-        window.addEventListener("scroll", onScroll);
-        return () => window.removeEventListener("scroll", onScroll);
+        const goldSections = document.querySelectorAll(".bg-gold-section");
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                let inGold = false;
+
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        inGold = true;
+                    }
+                });
+
+                setIsOnGoldSection(inGold);
+            },
+            {
+                threshold: 0.4, // 40% visible
+            }
+        );
+
+        goldSections.forEach((section) => observer.observe(section));
+
+        return () => observer.disconnect();
     }, []);
 
     useEffect(() => {
@@ -62,12 +78,17 @@ export default function Navbar() {
             {/* ── Barre principale ─────────────────────────────────────────────── */}
             <div
                 className={`
-                w-full transition-all duration-500 border-b
-                ${scrolled
-                    ? "bg-white/20 backdrop-blur-md border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-                    : "bg-white/5 backdrop-blur-xs border-transparent"
+w-full transition-all duration-500 border-b
+
+${
+                    isOnGoldSection
+                        ? "bg-white/60 backdrop-blur-md border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.25)]"
+                        : scrolled
+                            ? "bg-white/20 backdrop-blur-md border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+                            : "bg-white/5 backdrop-blur-xs border-transparent"
                 }
-        `}
+`}
+
             >
                 <div
                     className="flex items-center justify-between gap-10 h-20"
@@ -106,7 +127,11 @@ export default function Navbar() {
                         <span className="h-5 w-px bg-white/20" />
 
                         {/* CTA */}
-                        <ButtonGold href="#contact" label="Nous contacter" className="mt-0"/>
+                        <ButtonGold
+                            href="#contact"
+                            label="Nous contacter"
+                            isInverted={isOnGoldSection}
+                        />
                     </div>
 
                 {/* Burger mobile */}

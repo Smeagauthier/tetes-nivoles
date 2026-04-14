@@ -10,7 +10,7 @@ export default function ButtonGold({
             onClick={onClick}
             className={`
                 inline-block pointer-events-auto
-                px-8 py-3.5 rounded-full z-100
+                px-8 py-3.5 z-50
                 text-sm tracking-[0.12em] uppercase font-semibold
                 whitespace-nowrap
                 transition-all duration-300 active:scale-95
@@ -26,11 +26,15 @@ export default function ButtonGold({
             }}
             onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "#CDA268";
-                e.currentTarget.style.boxShadow = "0 0 32px rgba(205,162,104,0.65)";
+                e.currentTarget.style.color = "#fff";
+                e.currentTarget.style.boxShadow =
+                    "0 0 32px rgba(205,162,104,0.65)";
             }}
             onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "transparent";
-                e.currentTarget.style.boxShadow = "0 0 10px rgba(205,162,104,0.15)";
+                e.currentTarget.style.color = "#CDA268";
+                e.currentTarget.style.boxShadow =
+                    "0 0 10px rgba(205,162,104,0.15)";
             }}
         >
             {label}
