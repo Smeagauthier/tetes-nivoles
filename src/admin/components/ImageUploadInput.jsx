@@ -3,112 +3,185 @@ import { useInput } from 'react-admin';
 
 export default function ImageUploadInput({
                                              source,
-                                             label       = 'Image',
-                                             uploadPath  = '/api/upload.php',   // endpoint upload
-                                             shape       = 'square',            // 'square' | 'circle'
-                                             preview     = null,                // taille preview en px
+                                             label = 'Images',
+                                             uploadPath = '/api/upload.php',
+                                             shape = 'square',
+                                             preview = null,
+                                             multiple = true,
+                                             type = 'members' // 👈 IMPORTANT (events / members / books)
                                          }) {
-    const { field }           = useInput({ source });
-    const [localPreview, setLocalPreview] = useState(field.value || null);
-    const [loading, setLoading]           = useState(false);
-    const [error,   setError]             = useState(null);
+    const { field } = useInput({ source });
 
-    const previewSize = preview || (shape === 'circle' ? 100 : 160);
+    const [loadingIndex, setLoadingIndex] = useState(null);
+    const [error, setError] = useState(null);
 
-    const handleFile = async (e) => {
+    // normalisation robuste (string / array / null)
+    const images = Array.isArray(field.value)
+        ? field.value
+        : field.value
+            ? [field.value]
+            : [];
+
+    const previewSize = preview || (shape === 'circle' ? 100 : 120);
+
+    const updateImages = (newImages) => {
+        field.onChange(newImages);
+    };
+
+    const handleFile = async (e, index = null) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        const allowed = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!allowed.includes(file.type)) {
-            setError('Format non autorisé (jpg, jpeg, png, webp uniquement)');
-            return;
-        }
-        if (file.size > 5 * 1024 * 1024) {
-            setError('Fichier trop lourd (5 Mo max)');
-            return;
-        }
-
-        setError(null);
-        setLoading(true);
-
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('type', type); // IMPORTANT pour ton PHP
 
         try {
-            const res  = await fetch(uploadPath, { method: 'POST', body: formData });
+            const res = await fetch(uploadPath, {
+                method: 'POST',
+                body: formData
+            });
+
             const data = await res.json();
 
             if (data.error) {
                 setError(data.error);
-            } else {
-                field.onChange(data.url);
-                setLocalPreview(data.url);
+                return;
             }
+
+            if (!multiple) {
+                field.onChange({ url: data.url });
+                return;
+            }
+
+            const newImages = [...images];
+
+            if (index !== null) {
+                newImages[index] = { url: data.url };
+            } else {
+                newImages.push({ url: data.url });
+            }
+
+            field.onChange(newImages);
+
         } catch {
             setError('Erreur réseau');
-        } finally {
-            setLoading(false);
         }
     };
 
+    const removeImage = (index) => {
+        const newImages = images.filter((_, i) => i !== index);
+        updateImages(newImages);
+    };
+
     return (
-        <div style={{ marginBottom: '1.5rem', width: '100%' }}>
+        <div style={{ marginBottom: 24, width: '100%' }}>
+
+            {/* LABEL */}
             <p style={{
                 color: 'rgba(255,255,255,0.7)',
-                fontSize: '12px',
-                marginBottom: '12px',
+                fontSize: 12,
+                marginBottom: 12,
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.05em'
             }}>
                 {label}
             </p>
 
-            {localPreview && (
-                <img
-                    src={localPreview}
-                    alt="Aperçu"
-                    style={{
-                        width:        previewSize,
-                        height:       previewSize,
-                        objectFit:    'cover',
-                        borderRadius: shape === 'circle' ? '50%' : '8px',
-                        border:       '2px solid #CDA268',
-                        display:      'block',
-                        marginBottom: '12px',
-                    }}
-                />
-            )}
-
-            <label style={{
-                display:         'inline-block',
-                padding:         '8px 20px',
-                backgroundColor: 'transparent',
-                border:          '1px solid #CDA268',
-                color:           '#CDA268',
-                borderRadius:    '4px',
-                cursor:          'pointer',
-                fontSize:        '13px',
-                letterSpacing:   '0.05em',
+            {/* IMAGES PREVIEW */}
+            <div style={{
+                display: 'flex',
+                gap: 12,
+                flexWrap: 'wrap',
+                marginBottom: 16
             }}>
-                {loading ? 'Upload en cours...' : 'Choisir une image'}
+                {images.map((img, i) => {
+                    const url = typeof img === 'string' ? img : img.url;
+
+                    return (
+                        <div key={i} style={{ position: 'relative' }}>
+
+                            <img
+                                src={url}
+                                style={{
+                                    width: previewSize,
+                                    height: previewSize,
+                                    objectFit: 'cover',
+                                    borderRadius: shape === 'circle' ? '50%' : 8,
+                                    border: '2px solid #CDA268'
+                                }}
+                            />
+
+                            {/* replace image */}
+                            <label style={{
+                                position: 'absolute',
+                                bottom: 4,
+                                left: 4,
+                                background: '#000',
+                                color: '#CDA268',
+                                fontSize: 20,
+                                padding: '2px 6px',
+                                cursor: 'pointer'
+                            }}>
+                                {loadingIndex === i ? '...' : '✎'}
+                                <input
+                                    type="file"
+                                    hidden
+                                    onChange={(e) => handleFile(e, i)}
+                                />
+                            </label>
+
+                            {/* delete image */}
+                            <button
+                                onClick={() => removeImage(i)}
+                                style={{
+                                    position: 'absolute',
+                                    top: 4,
+                                    right: 4,
+                                    background: 'red',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: 4,
+                                    cursor: 'pointer',
+                                    width: 20,
+                                    height: 20,
+                                    fontSize: 15,
+                                    lineHeight: '18px'
+                                }}
+                            >
+                                ×
+                            </button>
+
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* ADD IMAGE */}
+            <label style={{
+                display: 'inline-block',
+                padding: '8px 16px',
+                border: '1px solid #CDA268',
+                color: '#CDA268',
+                cursor: 'pointer',
+                fontSize: 13,
+                borderRadius: 4
+            }}>
+                + Ajouter une image
                 <input
                     type="file"
-                    accept=".jpg,.jpeg,.png,.webp"
-                    onChange={handleFile}
-                    style={{ display: 'none' }}
+                    hidden
+                    onChange={(e) => handleFile(e)}
                 />
             </label>
 
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px', marginTop: '8px' }}>
-                JPG, JPEG, PNG, WEBP — 5 Mo max
-            </p>
-
+            {/* ERROR */}
             {error && (
-                <p style={{ color: '#f44336', fontSize: '12px', marginTop: '8px' }}>
+                <p style={{ color: 'red', fontSize: 12, marginTop: 8 }}>
                     {error}
                 </p>
             )}
+
         </div>
     );
 }

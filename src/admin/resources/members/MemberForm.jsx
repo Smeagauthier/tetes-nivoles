@@ -16,6 +16,7 @@ export default function MemberForm() {
                 source="photo"
                 label="Photo"
                 shape="circle"
+                type="members"
             />
         </SimpleForm>
     );

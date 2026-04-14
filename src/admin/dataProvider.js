@@ -1,5 +1,25 @@
 const API_URL = '/api';
 
+const normalizeData = (data) => {
+    const newData = { ...data };
+
+    ['cover_image', 'back_cover_image', 'photo'].forEach(field => {
+        if (Array.isArray(newData[field])) {
+            newData[field] = newData[field][0]?.url ?? null;
+        } else if (newData[field]?.url) {
+            newData[field] = newData[field].url;
+        }
+    });
+
+    if (Array.isArray(newData.images)) {
+        newData.images = newData.images.map(img =>
+            typeof img === 'string' ? { url: img } : img
+        );
+    }
+
+    return newData;
+};
+
 export const dataProvider = {
     getList: async (resource) => {
         const res   = await fetch(`${API_URL}/${resource}.php`);
@@ -27,7 +47,7 @@ export const dataProvider = {
         const res  = await fetch(`${API_URL}/${resource}.php`, {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify(data),
+            body:    JSON.stringify(normalizeData(data)),
         });
         const json = await res.json();
         return { data: json };
@@ -37,7 +57,7 @@ export const dataProvider = {
         const res  = await fetch(`${API_URL}/${resource}.php?id=${id}`, {
             method:  'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify(data),
+            body:    JSON.stringify(normalizeData(data)),
         });
         const json = await res.json();
         return { data: json };

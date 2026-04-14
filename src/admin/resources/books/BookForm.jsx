@@ -14,6 +14,16 @@ export default function BookForm() {
                 label="Couverture"
                 shape="square"
                 preview={160}
+                type="books"
+                multiple={false}
+            />
+            <ImageUploadInput
+                source="back_cover_image"
+                label="Couverture (verso)"
+                shape="square"
+                preview={160}
+                type="books"
+                multiple={false}
             />
         </SimpleForm>
     );

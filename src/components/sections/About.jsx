@@ -89,7 +89,6 @@ export default function About() {
                     >
                         {aboutData.body}
                     </motion.p>
-
                 </div>
 
                 {/* ── Colonne droite : image grande ── */}

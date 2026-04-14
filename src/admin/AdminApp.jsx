@@ -16,6 +16,11 @@ import BookListDraggable   from './resources/books/BookList';
 import BookEdit            from './resources/books/BookEdit';
 import BookCreate          from './resources/books/BookCreate';
 
+//Events
+import EventListDraggable   from './resources/events/EventList';
+import EventEdit            from './resources/events/EventEdit';
+import EventCreate          from './resources/events/EventCreate';
+
 const i18nProvider = polyglotI18nProvider(() => frenchMessages, 'fr');
 
 const authProvider = {
@@ -34,6 +39,7 @@ const authProvider = {
 
 const MemberListPage = () => <List pagination={false}><MemberListDraggable /></List>;
 const BookListPage   = () => <List pagination={false}><BookListDraggable /></List>;
+const EventListPage   = () => <List pagination={false}><EventListDraggable /></List>;
 
 export default function AdminApp() {
     return (
@@ -59,6 +65,13 @@ export default function AdminApp() {
                 edit={BookEdit}
                 create={BookCreate}
                 options={{ label: 'Livres' }}
+            />
+            <Resource
+                name="events"
+                list={EventListPage}
+                edit={EventEdit}
+                create={EventCreate}
+                options={{ label: 'Evènements' }}
             />
         </Admin>
     );

@@ -1,8 +1,8 @@
 export const NAV_LINKS = [
-    { id: "compagnie", href: "#", label: "La compagnie" },
-    { id: "recueil", href: "#", label: "Le recueil" },
-    { id: "tetes-nivoles", href: "#", label: "Les têtes nivoles" },
-    { id: "activites", href: "#", label: "Nos activités" },
+    { id: "compagnie", href: "#about", label: "La compagnie" },
+    { id: "tetes-nivoles", href: "#members", label: "Les têtes nivoles" },
+    { id: "recueil", href: "#books", label: "Le recueil" },
+    { id: "activites", href: "#events", label: "Nos activités" },
 ];
 
 export const SOCIAL_LINKS = [
