@@ -1,13 +1,20 @@
-import { Admin, Resource, List, SimpleForm,
-    TextInput, Edit, Create,
-    useNotify, useRefresh } from 'react-admin';
+import { Admin, Resource, List } from 'react-admin';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 import frenchMessages from 'ra-language-french';
+
 import { dataProvider } from './dataProvider';
-import { adminTheme } from './adminTheme';
-import AdminLogin from './AdminLogin';
-import MemberListDraggable from './MemberListDraggable';
-import MemberPhotoInput from './MemberPhotoInput';
+import { adminTheme }   from './adminTheme';
+import AdminLogin       from './AdminLogin';
+
+// Members
+import MemberListDraggable from './resources/members/MemberList';
+import MemberEdit          from './resources/members/MemberEdit';
+import MemberCreate        from './resources/members/MemberCreate';
+
+// Books
+import BookListDraggable   from './resources/books/BookList';
+import BookEdit            from './resources/books/BookEdit';
+import BookCreate          from './resources/books/BookCreate';
 
 const i18nProvider = polyglotI18nProvider(() => frenchMessages, 'fr');
 
@@ -19,54 +26,14 @@ const authProvider = {
         }
         return Promise.reject(new Error('Identifiants incorrects'));
     },
-    logout: () => {
-        localStorage.removeItem('auth');
-        return Promise.resolve();
-    },
-    checkAuth: () =>
-        localStorage.getItem('auth') ? Promise.resolve() : Promise.reject(),
-    checkError: ({ status }) =>
-        status === 401 || status === 403 ? Promise.reject() : Promise.resolve(),
+    logout:         () => { localStorage.removeItem('auth'); return Promise.resolve(); },
+    checkAuth:      () => localStorage.getItem('auth') ? Promise.resolve() : Promise.reject(),
+    checkError:     ({ status }) => status === 401 || status === 403 ? Promise.reject() : Promise.resolve(),
     getPermissions: () => Promise.resolve(),
 };
 
-const MemberList = () => (
-    <List pagination={false}>
-        <MemberListDraggable />
-    </List>
-);
-
-const MemberForm = () => (
-    <SimpleForm>
-        <TextInput source="name" label="Prénom - Nom"  fullWidth />
-        <TextInput source="role" label="Rôle" fullWidth />
-        <TextInput source="bio"  label="Bio"  multiline fullWidth />
-        <MemberPhotoInput source="photo" />
-    </SimpleForm>
-);
-
-const MemberEdit = () => {
-    const refresh = useRefresh();
-    const notify  = useNotify();
-
-    return (
-        <Edit
-            mutationMode="optimistic"
-            onSuccess={() => {
-                notify('Membre mis à jour');
-                refresh();
-            }}
-        >
-            <MemberForm />
-        </Edit>
-    );
-};
-
-const MemberCreate = () => (
-    <Create>
-        <MemberForm />
-    </Create>
-);
+const MemberListPage = () => <List pagination={false}><MemberListDraggable /></List>;
+const BookListPage   = () => <List pagination={false}><BookListDraggable /></List>;
 
 export default function AdminApp() {
     return (
@@ -81,10 +48,17 @@ export default function AdminApp() {
         >
             <Resource
                 name="members"
-                list={MemberList}
+                list={MemberListPage}
                 edit={MemberEdit}
                 create={MemberCreate}
                 options={{ label: 'Membres' }}
+            />
+            <Resource
+                name="books"
+                list={BookListPage}
+                edit={BookEdit}
+                create={BookCreate}
+                options={{ label: 'Livres' }}
             />
         </Admin>
     );

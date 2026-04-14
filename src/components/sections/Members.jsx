@@ -23,7 +23,6 @@ function MemberCard({ member, index }) {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
-            {/* Photo N&B → dorée au hover */}
             <div className="relative overflow-hidden">
                 <img
                     src={member.photo}
@@ -31,17 +30,15 @@ function MemberCard({ member, index }) {
                     className="member-photo w-full h-80 object-cover object-top"
                     style={{ clipPath: "ellipse(50% 50% at 50% 50%)" }}
                 />
-
-                {/* Overlay doré */}
                 <AnimatePresence>
                     {hovered && (
                         <motion.div
                             className="absolute inset-0"
                             style={{
                                 background: `linear-gradient(to top,
-            ${COLORS.night}EE 0%,
-            ${COLORS.night}99 40%,
-            rgba(205,162,104,0.15) 100%)`,
+                                    ${COLORS.night}EE 0%,
+                                    ${COLORS.night}99 40%,
+                                    rgba(205,162,104,0.15) 100%)`,
                                 clipPath: "ellipse(50% 50% at 50% 50%)"
                             }}
                             initial={{ opacity: 0 }}
@@ -51,8 +48,6 @@ function MemberCard({ member, index }) {
                         />
                     )}
                 </AnimatePresence>
-
-                {/* Bio superposée en bas comme avant */}
                 <AnimatePresence>
                     {hovered && (
                         <motion.div
@@ -62,29 +57,20 @@ function MemberCard({ member, index }) {
                             exit={{ opacity: 0, y: 8 }}
                             transition={{ duration: 0.35, delay: 0.05 }}
                         >
-                            <p
-                                className="text-sm leading-relaxed"
-                                style={{ color: "rgba(255,255,255,0.9)" }}
-                            >
+                            <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.9)" }}>
                                 {member.bio}
                             </p>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </div>
-            {/* Nom + rôle */}
             <div className="pt-6 pb-2 flex flex-col gap-1">
-        <span className="text-white text-md font-light tracking-widest uppercase">
-          {member.name}
-        </span>
-                <span
-                    className="text-xs tracking-widest uppercase"
-                    style={{ color: COLORS.gold }}
-                >
-          {member.role}
-        </span>
-
-                {/* Trait doré qui s'étend au hover */}
+                <span className="text-white text-md font-light tracking-widest uppercase">
+                    {member.name}
+                </span>
+                <span className="text-xs tracking-widest uppercase" style={{ color: COLORS.gold }}>
+                    {member.role}
+                </span>
                 <motion.div
                     className="mt-2 h-px"
                     style={{ backgroundColor: COLORS.gold }}
@@ -96,18 +82,116 @@ function MemberCard({ member, index }) {
     );
 }
 
+function AuthorCard({ member }) {
+    const [hovered, setHovered] = useState(false);
+
+    return (
+        <motion.div
+            className="w-full max-w-7xl"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            {/*/!* Séparateur haut *!/*/}
+            {/*<div style={{*/}
+            {/*    width:        '100%',*/}
+            {/*    height:       '1px',*/}
+            {/*    background:   `linear-gradient(to right, ${COLORS.gold}, transparent)`,*/}
+            {/*    marginBottom: 'clamp(40px, 6vw, 80px)',*/}
+            {/*    opacity:      0.4,*/}
+            {/*}} />*/}
+
+            <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-center md:items-start">
+
+                {/* Photo */}
+                <div className="flex-shrink-0" style={{
+                    width:  'clamp(200px, 22vw, 320px)',
+                    height: 'clamp(200px, 22vw, 320px)',
+                }}>
+                    <img
+                        src={member.photo}
+                        alt={member.name}
+                        style={{
+                            width:          '100%',
+                            height:         '100%',
+                            objectFit:      'cover',
+                            objectPosition: 'top',
+                            clipPath:       'ellipse(50% 50% at 50% 50%)',
+                        }}
+                    />
+                </div>
+
+                {/* Contenu */}
+                <div className="flex flex-col gap-6 flex-1 text-center md:text-left">
+
+                    {/* Rôle */}
+                    <span
+                        className="text-xs tracking-[0.4em] uppercase"
+                        style={{ color: COLORS.gold }}
+                    >
+                        {member.role}
+                    </span>
+
+                    {/* Nom */}
+                    <h3
+                        className="text-white font-light tracking-widest uppercase"
+                        style={{ fontSize: 'clamp(24px, 3vw, 40px)', lineHeight: 1.1 }}
+                    >
+                        {member.name}
+                    </h3>
+
+                    {/* Trait doré animé */}
+                    <motion.div
+                        className="h-px mx-auto md:mx-0"
+                        style={{ backgroundColor: COLORS.gold }}
+                        animate={{ width: hovered ? '120px' : '48px' }}
+                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                    />
+
+                    {/* Bio */}
+                    <p
+                        className="leading-relaxed text-justify"
+                        style={{
+                            color:    'rgba(255,255,255,0.7)',
+                            fontSize: 'clamp(14px, 1.2vw, 16px)',
+                            maxWidth: '560px',
+                        }}
+                    >
+                        {member.bio}
+                    </p>
+                </div>
+            </div>
+
+            {/*/!* Séparateur bas *!/*/}
+            {/*<div style={{*/}
+            {/*    width:      '100%',*/}
+            {/*    height:     '1px',*/}
+            {/*    background: `linear-gradient(to right, ${COLORS.gold}, transparent)`,*/}
+            {/*    marginTop:  'clamp(40px, 6vw, 80px)',*/}
+            {/*    opacity:    0.4,*/}
+            {/*}} />*/}
+        </motion.div>
+    );
+}
+
 export default function Members() {
     const { members, loading, error } = useMembers();
     if (loading) return null;
     if (error)   return null;
+
+    const author = members.find(m => m.id === 2);
+    const rest   = members.filter(m => m.id !== 2);
 
     return (
         <section
             id="members"
             style={{
                 backgroundColor: COLORS.night,
-                paddingTop: "clamp(80px, 15vw, 200px)",
-                paddingBottom: "clamp(80px, 15vw, 200px)",
+                paddingTop:      "clamp(80px, 15vw, 200px)",
+                paddingBottom:   "clamp(80px, 15vw, 200px)",
             }}
             className="flex flex-col items-center px-8 md:px-16"
         >
@@ -123,17 +207,22 @@ export default function Members() {
                 >
                     Les Têtes Nivoles
                 </motion.p>
-
                 <motion.div
-                    className="w-12 h-px "
+                    className="w-12 h-px"
                     style={{ backgroundColor: COLORS.gold }}
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.1 }}
                 />
-
             </div>
+
+            {/* ── Carte auteur ── */}
+            {author && (
+                <div className="w-full max-w-7xl mt-16">
+                    <AuthorCard member={author} />
+                </div>
+            )}
 
             {/* ── Mobile : Swiper ── */}
             <div className="w-full md:hidden mt-16">
@@ -146,7 +235,7 @@ export default function Members() {
                     loop={true}
                     className="w-full"
                 >
-                    {members.map((member) => (
+                    {rest.map((member) => (
                         <SwiperSlide key={member.id}>
                             <MemberCard member={member} index={0} />
                         </SwiperSlide>
@@ -154,23 +243,18 @@ export default function Members() {
                 </Swiper>
             </div>
 
-            {/* ── Desktop : grille 4+3 ── */}
+            {/* ── Desktop : grille ── */}
             <div className="hidden md:flex flex-col gap-16 w-full max-w-7xl mt-16">
-
-                {/* Ligne 1 : 4 cartes */}
                 <div className="grid grid-cols-4 gap-15">
-                    {members.slice(0, 4).map((member, i) => (
+                    {rest.slice(0, 4).map((member, i) => (
                         <MemberCard key={member.id} member={member} index={i} />
                     ))}
                 </div>
-
-                {/* Ligne 2 : 3 cartes centrées */}
                 <div className="grid grid-cols-3 gap-6 w-3/4 mx-auto">
-                    {members.slice(4).map((member, i) => (
+                    {rest.slice(4).map((member, i) => (
                         <MemberCard key={member.id} member={member} index={i + 4} />
                     ))}
                 </div>
-
             </div>
         </section>
     );
