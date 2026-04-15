@@ -1,13 +1,41 @@
+import { useNavigate, useLocation } from "react-router-dom";
+
 export default function ButtonGold({
                                        href = "#contact",
                                        label = "Nous contacter",
                                        onClick = null,
                                        className = "",
                                    }) {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const isHome = location.pathname === "/";
+
+    const handleClick = (e) => {
+        if (onClick) onClick(e);
+        if (e.defaultPrevented) return;
+
+        e.preventDefault();
+
+        const id = href.replace("#", "");
+
+        if (!isHome) {
+            navigate("/");
+
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+        } else {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
     return (
         <a
             href={href}
-            onClick={onClick}
+            onClick={handleClick}
             className={`
                 inline-block pointer-events-auto
                 px-8 py-3.5 z-50
@@ -17,7 +45,6 @@ export default function ButtonGold({
                 border border-[#CDA268]
                 text-[#CDA268]
                 hover:text-white
-                hover:border-[#CDA268]
                 ${className}
             `}
             style={{

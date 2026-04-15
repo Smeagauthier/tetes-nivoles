@@ -1,43 +1,82 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import SocialLink from "../ui/SocialLinks.jsx";
 import logo from "../../assets/images/logo-tn.png";
 import { NAV_LINKS, SOCIAL_LINKS } from "../../constants/navigation";
 import ButtonGold from "../ui/ButtonGold.jsx";
 
+
 // ─── NavLink ──────────────────────────────────────────────────────────────────
 
-const NavLink = ({ href, label, onClick }) => (
+const NavLink = ({ href, label, onClick, isHome }) => {
+    const finalHref = isHome ? href : "/";
 
-<a    href={href}
-onClick={onClick}
-className="
-relative text-lg tracking-[0.08em]
-text-white
-transition-colors duration-200
-"
-onMouseEnter={(e) => {
-    e.currentTarget.style.color = "#CDA268";
-    e.currentTarget.querySelector(".underline-bar").style.width = "100%";
-    e.currentTarget.querySelector(".underline-bar").style.backgroundColor = "#CDA268";
-}}
-onMouseLeave={(e) => {
-    e.currentTarget.style.color = "";
-    e.currentTarget.querySelector(".underline-bar").style.width = "0";
-}}
->
-{label}
-<span
-    className="underline-bar absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300"
-/>
-</a>
-);
+    return (
+        <a
+            href={finalHref}
+            onClick={onClick}
+            className="
+                relative text-lg tracking-[0.08em]
+                text-white
+                transition-colors duration-200
+            "
+            onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#CDA268";
+                e.currentTarget.querySelector(".underline-bar").style.width = "100%";
+                e.currentTarget.querySelector(".underline-bar").style.backgroundColor = "#CDA268";
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.color = "";
+                e.currentTarget.querySelector(".underline-bar").style.width = "0";
+            }}
+        >
+            {label}
+            <span className="underline-bar absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300" />
+        </a>
+    );
+};
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
+    const [scrolled] = useState(false);
     const [isOnGoldSection, setIsOnGoldSection] = useState(false);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isHome = location.pathname === "/";
+
+    const getHref = (href) => {
+        if (isHome) return href;
+        return "/";
+    };
+
+    const handleNav = (href) => {
+        const id = href.replace("#", "");
+
+        if (!isHome) {
+            navigate("/");
+
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+        } else {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+        }
+
+        setIsOpen(false);
+    };
+
+    useEffect(() => {
+        if (isHome && location.hash) {
+            const id = location.hash.replace("#", "");
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [location]);
 
     useEffect(() => {
         const goldSections = document.querySelectorAll(".bg-gold-section");
@@ -111,6 +150,11 @@ ${
                                 key={link.href}
                                 href={link.href}
                                 label={link.label}
+                                isHome={isHome}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleNav(link.href);
+                                }}
                             />
                         ))}
                     </div>
@@ -184,9 +228,13 @@ ${
                     {NAV_LINKS.map((link, index) => (
 
                     <a    key={link.href}
-                        href={link.href}
-                        onClick={closeMenu}
-                        className="
+                          href={isHome ? link.href : "/"}
+                          onClick={(e) => {
+                              e.preventDefault();
+                              handleNav(link.href);
+                              closeMenu();
+                          }}
+                          className="
                         w-full text-center
                         py-6 text-2xl tracking-[0.12em] uppercase font-light
                         border-b border-white/10 last:border-0

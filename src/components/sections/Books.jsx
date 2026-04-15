@@ -268,7 +268,7 @@ export default function Books() {
         <section
             id="books"
             style={{
-                backgroundColor: COLORS.gold,
+                backgroundColor: "#A26721",
                 paddingTop: "clamp(80px, 15vw, 200px)",
                 paddingBottom: "clamp(80px, 15vw, 200px)",
             }}
