@@ -10,8 +10,7 @@ export default function ScrollTopButton() {
         setMounted(true);
 
         const onScroll = () => {
-            const show = window.scrollY > 400;
-            setVisible(show);
+            setVisible(window.scrollY > 400);
         };
 
         window.addEventListener("scroll", onScroll);
@@ -30,16 +29,29 @@ export default function ScrollTopButton() {
             onClick={scrollToTop}
             aria-label="Retour en haut"
             className={`
-                fixed bottom-6 right-6 z-50
-                w-12 h-12 rounded-full
+                fixed z-50
                 cursor-pointer
+
+                bottom-[calc(3rem+env(safe-area-inset-bottom))]
+
+                right-4
+                sm:bottom-8 sm:right-6
+
+                w-11 h-11 sm:w-12 sm:h-12
+                rounded-full
+
                 flex items-center justify-center
+
                 border border-[#CDA268]/80
                 bg-[#070F2B]/60 backdrop-blur-md
                 text-[#CDA268]
+
                 shadow-[0_0_20px_rgba(205,162,104,0.15)]
+
                 transition-all duration-500 ease-out
-                hover:bg-[#CDA268] hover:text-white
+
+                hover:bg-[#CDA268]
+                hover:text-white
                 hover:shadow-[0_0_30px_rgba(205,162,104,0.5)]
                 hover:scale-105
 

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 import { useHeros } from "../../hooks/useHeros.js";
@@ -12,7 +12,6 @@ export default function Hero() {
     const imgRefs = useRef([]);
     const barRef = useRef(null);
     const swiperRef = useRef(null);
-    const contentRef = useRef(null);
 
     const { hero, loading, error } = useHeros();
     const [activeIndex, setActiveIndex] = useState(0);
@@ -20,24 +19,6 @@ export default function Hero() {
     const heroData = hero?.[0];
     const images = heroData?.images ?? [];
     const canLoop = images.length > 1;
-
-    useEffect(() => {
-        const onScroll = () => {
-            const y = window.scrollY;
-
-            imgRefs.current.forEach((img) => {
-                if (!img) return;
-                img.style.transform = `translateY(${y * 0.35}px)`;
-            });
-
-            if (contentRef.current) {
-                contentRef.current.style.transform = `translateY(${y * 0.15}px)`;
-            }
-        };
-
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
 
     const resetAnimations = (realIndex) => {
         setActiveIndex(realIndex);
@@ -70,7 +51,6 @@ export default function Hero() {
     if (!hero) return null;
 
     return (
-
         <section id="hero" className="relative w-full h-screen overflow-hidden">
 
             <Swiper
@@ -88,7 +68,6 @@ export default function Hero() {
                 {heroData?.images?.map((img, index) => (
                     <SwiperSlide key={index}>
                         <div className="relative w-full h-full">
-
                             <img
                                 ref={(el) => (imgRefs.current[index] = el)}
                                 src={img.url || defaultImg}
@@ -106,56 +85,73 @@ export default function Hero() {
                 ))}
             </Swiper>
 
-            {/* ── Overlay ───────────────────────────── */}
             <div
                 className="absolute inset-0 z-[1] pointer-events-none"
                 style={{
                     background:
-                        "linear-gradient(to top, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.50) 50%, rgba(0,0,0,0.5) 100%)",
+                        "linear-gradient(to top, rgba(7,15,43,0.95) 0%, rgba(7,15,43,0.75) 45%, rgba(7,15,43,0.55) 100%)",
                 }}
             />
 
-            {/* ── Content ───────────────────────────── */}
-            <div
-                ref={contentRef}
-                className="absolute inset-0 z-[2] flex flex-col items-center justify-center px-6 text-center pointer-events-none"
-                style={{ willChange: "transform" }}
-            >
+            {/* TEXTE CENTER */}
+            <div className="absolute inset-0 z-[2] flex flex-col items-center justify-center px-6 text-center pointer-events-none">
+
                 <div className="flex flex-col items-center md:items-start">
 
-                    <h1 className="calligraphy text-white leading-relaxed drop-shadow-2xl text-center md:text-left"
-                        style={{ fontSize: "clamp(3rem, 6vw, 5rem)" }}
+                    {/* HERO TITLE - ANIMATION UNIQUE */}
+                    <h1
+                        data-aos="fade"
+                        data-aos-duration="1200"
+                        data-aos-easing="ease-out-quad"
+                        className="calligraphy text-white leading-tight drop-shadow-2xl text-center md:text-left pt-28 sm:pt-32 md:pt-40"
+                        style={{
+                            fontSize: "clamp(2.2rem, 6vw, 5rem)",
+                        }}
                     >
                         {heroData.title || "« L'art est une maison habitée »"}
                     </h1>
 
-                    <p className="text-white/50 tracking-[0.1em] mt-1 w-full text-right"
-                       style={{ fontSize: "clamp(0.65rem, 1.2vw, 0.78rem)", fontStyle: "italic" }}
+                    {/* SUBTITLE - MÊME ANIMATION */}
+                    <p
+                        data-aos="fade"
+                        data-aos-duration="1200"
+                        data-aos-easing="ease-out-quad"
+                        data-aos-delay="120"
+                        className="text-white/50 tracking-[0.08em] sm:tracking-[0.1em] mt-2 w-full text-center md:text-right"
+                        style={{
+                            fontSize: "clamp(0.6rem, 1.2vw, 0.78rem)",
+                            fontStyle: "italic",
+                        }}
                     >
                         {heroData.subtitle}
                     </p>
 
                 </div>
 
-                {/* Separator */}
-                <div className="mt-20 mb-3 flex items-center gap-3">
+                {/* SEPARATOR (NO ANIMATION) */}
+                <div className="mt-10 mb-3 flex items-center gap-3">
                     <span className="h-px w-10 opacity-50" style={{ backgroundColor: "#CDA268" }} />
                     <span className="w-1 h-1 rounded-full opacity-60" style={{ backgroundColor: "#CDA268" }} />
                     <span className="h-px w-10 opacity-50" style={{ backgroundColor: "#CDA268" }} />
                 </div>
 
-                <h2 className="text-white/70 text-sm md:text-base tracking-[0.18em] uppercase max-w-md leading-relaxed font-normal">
+                {/* H2 (NO ANIMATION) */}
+                <h2 className="text-white/70 text-center text-xs sm:text-sm md:text-base tracking-[0.14em] sm:tracking-[0.18em] uppercase max-w-lg leading-relaxed font-normal my-4 px-2">
                     Troupe de comédiens pour des lectures musicales de textes contemporains
                 </h2>
 
-                <ButtonGold
-                    href="#contact"
-                    label="Nous contacter"
-                    className="mt-10 pointer-events-auto"
-                />
+                {/* BUTTON (NO ANIMATION) */}
+                <div>
+                    <ButtonGold
+                        href="#contact"
+                        label="Nous contacter"
+                        className="mt-5 pointer-events-auto"
+                    />
+                </div>
+
             </div>
 
-            {/* ── Pagination ───────────────────────────── */}
+            {/* PROGRESS INDICATORS */}
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[3] flex items-center gap-3">
 
                 {heroData?.images?.map((_, i) => (
@@ -174,6 +170,7 @@ export default function Hero() {
                     </div>
                 ))}
             </div>
+
         </section>
     );
 }

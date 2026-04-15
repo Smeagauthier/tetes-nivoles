@@ -5,270 +5,202 @@ import logo from "../../assets/images/logo-tn.png";
 import { NAV_LINKS, SOCIAL_LINKS } from "../../constants/navigation";
 import ButtonGold from "../ui/ButtonGold.jsx";
 
-const NavLink = ({ href, label, onClick, isHome }) => {
-    const finalHref = isHome ? href : "/";
-
-    return (
-        <a
-            href={finalHref}
-            onClick={onClick}
-            className="
-                relative text-lg tracking-[0.08em]
-                text-white
-                transition-colors duration-200
-            "
-            onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#CDA268";
-                e.currentTarget.querySelector(".underline-bar").style.width = "100%";
-                e.currentTarget.querySelector(".underline-bar").style.backgroundColor = "#CDA268";
-            }}
-            onMouseLeave={(e) => {
-                e.currentTarget.style.color = "";
-                e.currentTarget.querySelector(".underline-bar").style.width = "0";
-            }}
-        >
-            {label}
-            <span className="underline-bar absolute left-0 -bottom-0.5 h-px w-0 transition-all duration-300" />
-        </a>
-    );
-};
-
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const [isOnGoldSection, setIsOnGoldSection] = useState(false);
 
     const navigate = useNavigate();
     const location = useLocation();
     const isHome = location.pathname === "/";
 
-    const [scrolled, setScrolled] = useState(false);
-
+    /* ================= LOCK SCROLL ================= */
     useEffect(() => {
-        const onScroll = () => {
-            setScrolled(window.scrollY > 10);
-        };
+        document.body.style.overflow = isOpen ? "hidden" : "";
+        return () => (document.body.style.overflow = "");
+    }, [isOpen]);
 
-        window.addEventListener("scroll", onScroll);
-        onScroll(); // init
+    /* ================= OFFSET SCROLL ================= */
+    const scrollToSection = (id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
 
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
+        const offset = window.innerHeight * 0.03;
+        const top = el.getBoundingClientRect().top + window.scrollY - offset;
 
-    const getHref = (href) => {
-        if (isHome) return href;
-        return "/";
+        window.scrollTo({ top, behavior: "smooth" });
     };
 
     const handleNav = (href) => {
         const id = href.replace("#", "");
+        setIsOpen(false);
 
         if (!isHome) {
             navigate("/");
-
-            setTimeout(() => {
-                const el = document.getElementById(id);
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-            }, 100);
+            setTimeout(() => scrollToSection(id), 120);
         } else {
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: "smooth" });
+            scrollToSection(id);
         }
-
-        setIsOpen(false);
     };
 
     useEffect(() => {
-        if (isHome && location.hash) {
-            const id = location.hash.replace("#", "");
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [location]);
+        const onScroll = () => setScrolled(window.scrollY > 10);
+        window.addEventListener("scroll", onScroll);
+        onScroll();
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
 
     useEffect(() => {
         const goldSections = document.querySelectorAll(".bg-gold-section");
 
         const observer = new IntersectionObserver(
             (entries) => {
-                let inGold = false;
-
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        inGold = true;
-                    }
-                });
-
-                setIsOnGoldSection(inGold);
+                setIsOnGoldSection(entries.some(e => e.isIntersecting));
             },
-            {
-                threshold: 0.4,
-            }
+            { threshold: 0.4 }
         );
 
-        goldSections.forEach((section) => observer.observe(section));
-
+        goldSections.forEach((s) => observer.observe(s));
         return () => observer.disconnect();
     }, []);
 
-    useEffect(() => {
-        const onResize = () => {
-            if (window.innerWidth >= 768) setIsOpen(false);
-        };
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
-    }, []);
-
-    const closeMenu = () => setIsOpen(false);
-
     return (
         <nav className="fixed top-0 left-0 w-full z-50 text-white">
+
+            {/* ================= TOP BAR ================= */}
             <div
                 className={`
-w-full transition-all duration-500 border-b
-
-${
+                    w-full transition-all duration-500 border-b
+                    ${
                     isOnGoldSection
-                        ? "bg-white/20 backdrop-blur-md border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+                        ? "bg-white/10 backdrop-blur-md border-white/10"
                         : scrolled
-                            ? "bg-white/25 backdrop-blur-md border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+                            ? "bg-white/10 backdrop-blur-md border-white/10"
                             : "bg-white/5 backdrop-blur-xs border-transparent"
                 }
-`}
+                `}
             >
-                <div
-                    className="flex items-center justify-between gap-10 h-20"
-                    style={{ paddingLeft: "5%", paddingRight: "5%" }}
-                >
-                    <a href="#" className="flex-shrink-0">
-                        <img
-                            src={logo}
-                            alt="Compagnie les Têtes Nivoles"
-                            className="h-16 w-auto object-contain"
-                        />
-                    </a>
+                <div className="flex items-center justify-between h-20 px-[5%]">
 
-                    <div className="hidden md:flex items-center gap-20 mx-auto flex-nowrap pl-10">
+                    <img src={logo} className="h-16" />
+
+                    <div className="hidden md:flex gap-16">
                         {NAV_LINKS.map((link) => (
-                            <NavLink
+                            <a
                                 key={link.href}
-                                href={link.href}
-                                label={link.label}
-                                isHome={isHome}
+                                href="#"
                                 onClick={(e) => {
                                     e.preventDefault();
                                     handleNav(link.href);
                                 }}
-                            />
+                                className="text-lg tracking-[0.08em] hover:text-[#CDA268]"
+                            >
+                                {link.label}
+                            </a>
                         ))}
                     </div>
 
-                    <div className="hidden md:flex items-center gap-5 flex-shrink-0">
-                        <div className="flex items-center gap-2">
-                            {SOCIAL_LINKS.map((link) => (
-                                <SocialLink key={link.name} link={link} />
-                            ))}
-                        </div>
+                    <div className="hidden md:flex items-center gap-5">
+                        {SOCIAL_LINKS.map((l) => (
+                            <SocialLink key={l.name} link={l} />
+                        ))}
 
-                        <span className="h-5 w-px bg-white/20" />
-
-                        <ButtonGold
-                            href="#contact"
-                            label="Nous contacter"
-                            isInverted={isOnGoldSection}
-                        />
+                        <ButtonGold href="#contact" label="Nous contacter" />
                     </div>
 
+                    {/* BURGER */}
                     <button
-                        className="
-              md:hidden flex flex-col justify-center items-center gap-[5px]
-              w-9 h-9 rounded-lg p-2
-              border border-white/20
-              hover:border-white/40 hover:bg-white/10
-              transition-all duration-200
-            "
                         onClick={() => setIsOpen(!isOpen)}
-                        aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
-                        aria-expanded={isOpen}
+                        className="md:hidden relative w-10 h-10 flex items-center justify-center z-[60]"
                     >
-                        <span className={`block w-4 h-[1.5px] bg-white rounded transition-all duration-300 ${isOpen ? "translate-y-[3px] rotate-45" : ""}`} />
-                        <span className={`block w-4 h-[1.5px] bg-white rounded transition-all duration-300 ${isOpen ? "opacity-0 scale-x-0" : ""}`} />
-                        <span className={`block w-4 h-[1.5px] bg-white rounded transition-all duration-300 ${isOpen ? "-translate-y-[3px] -rotate-45" : ""}`} />
+                        <span
+                            className="absolute w-6 h-[2px] bg-white transition-all duration-300"
+                            style={{
+                                transform: isOpen
+                                    ? "rotate(45deg)"
+                                    : "translateY(-6px)",
+                            }}
+                        />
+                        <span
+                            className="absolute w-6 h-[2px] bg-white transition-all duration-300"
+                            style={{
+                                opacity: isOpen ? 0 : 1,
+                            }}
+                        />
+                        <span
+                            className="absolute w-6 h-[2px] bg-white transition-all duration-300"
+                            style={{
+                                transform: isOpen
+                                    ? "rotate(-45deg)"
+                                    : "translateY(6px)",
+                            }}
+                        />
                     </button>
                 </div>
             </div>
 
+            {/* ================= MOBILE MENU ================= */}
             <div
                 className={`
-          md:hidden fixed inset-0 z-40
-          flex flex-col
-          transition-all duration-500 ease-in-out
-          ${
+                    md:hidden fixed inset-0 z-40 flex flex-col
+                    transition-all duration-500 ease-out
+                    ${
                     isOpen
-                        ? "opacity-100 pointer-events-auto"
-                        : "opacity-0 pointer-events-none"
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 -translate-y-6 pointer-events-none"
                 }
-        `}
+                `}
             >
-                <div className="absolute inset-0 bg-black/85 backdrop-blur-xl" />
+                <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
 
-                <div className="relative z-10 flex flex-col items-center justify-center h-full gap-2 px-8">
-                    {NAV_LINKS.map((link, index) => (
-                        <a
-                            key={link.href}
-                            href={isHome ? link.href : "/"}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleNav(link.href);
-                                closeMenu();
-                            }}
-                            className="
-                        w-full text-center
-                        py-6 text-2xl tracking-[0.12em] uppercase font-light
-                        border-b border-white/10 last:border-0
-                        transition-all duration-200
-                        "
-                            style={{
-                                transitionDelay: isOpen ? `${index * 60}ms` : "0ms",
-                                transform: isOpen ? "translateY(0)" : "translateY(12px)",
-                                opacity: isOpen ? 1 : 0,
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.color = "#CDA268";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.color = "";
-                            }}
-                        >
-                            {link.label}
-                        </a>
-                    ))}
-
-                    <div className="flex flex-col items-center gap-6 mt-12">
-                        <div className="flex gap-4">
-                            {SOCIAL_LINKS.map((link) => (
-                                <SocialLink key={link.name} link={link} />
-                            ))}
-                        </div>
-
-                        <ButtonGold href="#contact" label="Nous contacter" className="mt-0" />
-                    </div>
-                </div>
-
+                {/* CROIX */}
                 <button
-                    onClick={closeMenu}
-                    className="
-            absolute top-6 right-6 z-20
-            w-10 h-10 rounded-full
-            flex items-center justify-center
-            border border-white/20
-            text-white/60 hover:text-white hover:border-white/50
-            transition-all duration-200
-            text-xl
-          "
-                    aria-label="Fermer le menu"
+                    onClick={() => setIsOpen(false)}
+                    className="absolute top-6 right-6 z-[9999] text-white text-3xl"
                 >
                     ✕
                 </button>
+
+                {/* ================= CONTENT (REMONTÉ + SPACÉ PROPREMENT) ================= */}
+                <div className="relative z-50 flex flex-col h-full px-8 pt-6">
+
+                    {/* SOCIAL */}
+                    <div className="flex justify-center gap-8 mt-10 mb-6 scale-105">
+                        {SOCIAL_LINKS.map((l) => (
+                            <SocialLink key={l.name} link={l} />
+                        ))}
+                    </div>
+
+                    {/* CTA */}
+                    <div className="flex justify-center mb-6">
+                        <ButtonGold
+                            href="#contact"
+                            label="Nous contacter"
+                            onClick={() => setIsOpen(false)}
+                        />
+                    </div>
+
+                    {/* LINKS */}
+                    <div className="flex flex-col items-center gap-12 flex-1 justify-center">
+                        {NAV_LINKS.map((link) => (
+                            <a
+                                key={link.href}
+                                href="#"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleNav(link.href);
+                                }}
+                                className="
+                                    text-xl md:text-2xl
+                                    uppercase tracking-[0.18em]
+                                    font-light
+                                "
+                            >
+                                {link.label}
+                            </a>
+                        ))}
+                    </div>
+                </div>
             </div>
         </nav>
     );

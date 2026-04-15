@@ -43,7 +43,7 @@ export default function Footer() {
                 </p>
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 pb-10 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 pb-15 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-6">
 
                 <p className="text-white/25 text-xs tracking-wider text-center sm:text-left">
                     © {year} Les Têtes Nivoles — Tous droits réservés

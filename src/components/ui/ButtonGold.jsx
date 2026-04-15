@@ -4,6 +4,7 @@ export default function ButtonGold({
                                        href = "#contact",
                                        label = "Nous contacter",
                                        onClick = null,
+                                       onNavigate = null,
                                        className = "",
                                    }) {
     const navigate = useNavigate();
@@ -30,6 +31,9 @@ export default function ButtonGold({
             const el = document.getElementById(id);
             if (el) el.scrollIntoView({ behavior: "smooth" });
         }
+
+        if (onNavigate) onNavigate();
+
     };
 
     return (
@@ -38,13 +42,19 @@ export default function ButtonGold({
             onClick={handleClick}
             className={`
                 inline-block pointer-events-auto
-                px-8 py-3.5 z-50
-                text-sm tracking-[0.12em] uppercase font-semibold
-                whitespace-nowrap
-                transition-all duration-300 active:scale-95
+                z-50 whitespace-nowrap
                 border border-[#CDA268]
                 text-[#CDA268]
+                transition-all duration-300 active:scale-95
+
+                px-5 py-2 text-xs
+
+                sm:px-6 sm:py-3 sm:text-sm
+                md:px-8 md:py-3.5 md:text-sm
+
+                tracking-[0.12em] uppercase font-semibold
                 hover:text-white
+
                 ${className}
             `}
             style={{

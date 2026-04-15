@@ -2,9 +2,8 @@ import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { Helmet } from "react-helmet-async";
-
 import { useEvents } from "../../hooks/useEvents";
+
 import { COLORS } from "../../constants/colors";
 import EventMeta from "../../components/events/EventMeta";
 
@@ -15,24 +14,25 @@ function isPast(date) {
 }
 
 const fadeUp = {
-    hidden: { opacity: 0, y: 32 },
+    hidden: { opacity: 0, y: 28 },
     visible: (delay = 0) => ({
         opacity: 1,
         y: 0,
-        transition: { duration: 0.8, ease: "easeOut", delay },
+        transition: { duration: 0.7, ease: "easeOut", delay },
     }),
 };
+
+/* ===================== UPCOMING ===================== */
 
 function UpcomingCard({ event, index }) {
     return (
         <motion.article
-            className=" bg-white/5 p-6 backdrop-blur-md"
-            initial={{ opacity: 0, y: 30 }}
+            className="bg-white/5 p-6 backdrop-blur-md rounded-xl"
+            initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.05 }}
-            style={{ borderRadius: 18 }}
         >
-            <h3 style={{ color: COLORS.gold }} className="text-lg uppercase tracking-widest">
+            <h3 className="text-lg uppercase tracking-widest" style={{ color: COLORS.gold }}>
                 {event.title}
             </h3>
 
@@ -47,45 +47,27 @@ function UpcomingCard({ event, index }) {
     );
 }
 
+/* ===================== ARCHIVE ===================== */
+
 function ArchiveCard({ event, index }) {
     const [open, setOpen] = useState(false);
+    const [expanded, setExpanded] = useState(false);
 
     const slides = event.images?.map(i => ({ src: i.url })) || [];
     const coverUrl = event.images?.[0]?.url || DEFAULT_EVENT_IMG;
 
-    const description =
-        event.description?.length > 150
-            ? event.description.slice(0, 150).trim() + "…"
+    const shortDesc =
+        event.description?.length > 160
+            ? event.description.slice(0, 160).trim() + "…"
             : event.description;
-
 
     return (
         <>
-            <Helmet>
-                <title>Événements | Têtes Nivoles – Spectacles & créations artistiques</title>
-
-                <meta
-                    name="description"
-                    content="Découvrez les événements des Têtes Nivoles : spectacles vivants, lectures et créations artistiques contemporaines."
-                />
-
-                <link rel="canonical" href="https://tetes-nivoles.fr/#events" />
-
-                <meta property="og:title" content="Événements | Têtes Nivoles" />
-                <meta property="og:description" content="Spectacles, lectures musicales et créations artistiques." />
-                <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://tetes-nivoles.fr/#events" />
-                <meta property="og:image" content="https://tetes-nivoles.fr/og-image.jpg" />
-
-                <meta name="twitter:card" content="summary_large_image" />
-            </Helmet>
-
             <motion.article
-                className="group relative border border-white/10 bg-white/5 backdrop-blur-md overflow-hidden"
-                initial={{ opacity: 0, y: 30 }}
+                className="group relative border border-white/10 bg-white/5 backdrop-blur-md overflow-hidden rounded-xl"
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
-                style={{ borderRadius: 18 }}
             >
                 {/* IMAGE */}
                 <div
@@ -94,12 +76,7 @@ function ArchiveCard({ event, index }) {
                 >
                     <img
                         src={coverUrl}
-                        className="
-                            w-full h-full object-cover
-                            transition-all duration-700
-                            group-hover:scale-105
-                            group-hover:brightness-110
-                        "
+                        className="w-full h-full object-cover transition duration-700 group-hover:scale-105"
                         alt={event.title}
                         loading="lazy"
                     />
@@ -108,54 +85,45 @@ function ArchiveCard({ event, index }) {
                         className="absolute inset-0"
                         style={{
                             background:
-                                "linear-gradient(to top, rgba(7,15,43,0.55), rgba(7,15,43,0.15))",
-                            pointerEvents: "none",
+                                "linear-gradient(to top, rgba(7,15,43,0.6), rgba(7,15,43,0.15))",
                         }}
                     />
                 </div>
 
-                <div className="p-6">
-                    <h3 style={{ color: COLORS.gold }} className="text-lg uppercase tracking-widest">
+                {/* CONTENT */}
+                <div className="p-6 flex flex-col gap-4">
+
+                    <h3 className="uppercase tracking-widest" style={{ color: COLORS.gold }}>
                         {event.title}
                     </h3>
 
-                    {event.description && (
-                        <p className="text-sm text-white/70 mt-3 leading-relaxed min-h-[60px]">
-                            {description}
-                        </p>
+                    {/* DESCRIPTION (expandable conservé) */}
+                    <p className="text-sm text-white/70 leading-relaxed">
+                        {expanded ? event.description : shortDesc}
+                    </p>
+
+                    {event.description?.length > 160 && (
+                        <button
+                            onClick={() => setExpanded(v => !v)}
+                            className="text-xs uppercase tracking-[0.25em] border-b border-[#CDA268] text-[#CDA268] w-fit hover:opacity-80 transition"
+                        >
+                            {expanded ? "Réduire" : "En savoir plus"}
+                        </button>
                     )}
 
                     <EventMeta event={event} />
 
                     {event.images?.length > 1 && (
-                        <div className="flex gap-2 mt-4">
-
+                        <div className="flex gap-2 mt-2">
                             {event.images.slice(0, 4).map((img, i) => (
                                 <img
                                     key={i}
                                     src={img.url}
                                     onClick={() => setOpen(true)}
-                                    className="w-14 h-14 object-cover rounded cursor-pointer flex-shrink-0"
-                                    alt={`Spectacle Têtes Nivoles - ${event.title}`}
-                                    loading="lazy"
+                                    className="w-14 h-14 object-cover rounded cursor-pointer"
+                                    alt={event.title}
                                 />
                             ))}
-
-                            {event.images.length > 5 && (
-                                <div
-                                    onClick={() => setOpen(true)}
-                                    className="w-14 h-14 rounded cursor-pointer flex items-center justify-center text-white text-xs font-bold relative overflow-hidden"
-                                    style={{
-                                        backgroundImage: `url(${event.images[4].url})`,
-                                        backgroundSize: "cover",
-                                        backgroundPosition: "center",
-                                    }}
-                                >
-                                    <div className="absolute inset-0 bg-black/60" />
-
-                                    <span className="relative z-10">+{event.images.length - 4}</span>
-                                </div>
-                            )}
                         </div>
                     )}
                 </div>
@@ -166,15 +134,40 @@ function ArchiveCard({ event, index }) {
                     open={open}
                     close={() => setOpen(false)}
                     slides={slides}
-                    controller={{
-                        closeOnBackdropClick: true,
-                    }}
                 />
             )}
         </>
     );
 }
 
+/* ===================== EMPTY STATE ===================== */
+
+function EmptyUpcoming() {
+    return (
+        <motion.div
+            className="text-center py-12 px-6 border border-white/10 bg-white/5 rounded-xl"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true }}
+        >
+            <p className="text-white/70 text-sm leading-relaxed max-w-xl mx-auto">
+                Aucun événement n’est prévu pour le moment.
+                De nouvelles dates seront annoncées prochainement, n’hésitez pas à revenir consulter cette page.
+            </p>
+
+            <motion.div
+                className="h-px w-24 mx-auto mt-6"
+                style={{ backgroundColor: COLORS.gold }}
+                initial={{ width: 0, opacity: 0 }}
+                whileInView={{ width: 96, opacity: 1 }}
+                transition={{ duration: 0.6 }}
+            />
+        </motion.div>
+    );
+}
+
+/* ===================== MAIN ===================== */
 
 export default function Events() {
     const { events, loading, error } = useEvents();
@@ -196,166 +189,85 @@ export default function Events() {
         };
     }, [events]);
 
-    //SEO BOOST
-    const schemaEvents = useMemo(() => {
-        const published = events.filter(e => e.is_published);
-
-        return {
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "name": "Événements Têtes Nivoles",
-            itemListElement: published.slice(0, 10).map((event, index) => ({
-                "@type": "Event",
-                position: index + 1,
-                name: event.title,
-                description: event.description || "",
-                image: event.images?.[0]?.url || "",
-                startDate: event.event_date,
-                eventAttendanceMode:
-                    "https://schema.org/OfflineEventAttendanceMode",
-                location: {
-                    "@type": "Place",
-                    name: "Têtes Nivoles"
-                }
-            }))
-        };
-    }, [events]);
-
     if (loading || error) return null;
 
     const upcomingToShow = upcoming.slice(0, showMoreUpcoming ? upcoming.length : 3);
     const pastToShow = past.slice(0, showMoreArchive ? past.length : 3);
 
     return (
-        <section style={{ background: COLORS.night }} className="px-6 md:px-16 py-24" id="events">
+        <section className="bg-[#070F2B] px-6 md:px-16 py-24" id="events">
 
-            <div className="max-w-7xl mx-auto flex flex-col gap-12 mb-20">
+            {/* HEADER */}
+            <div className="max-w-7xl mx-auto flex flex-col gap-10 mb-16">
+                <header className="flex flex-col gap-4">
+                    <motion.p
+                        className="text-md uppercase tracking-[0.4em]"
+                        style={{ color: COLORS.gold }}
+                    >
+                        Nos spectacles
+                    </motion.p>
 
-                <motion.p
-                    style={{ color: COLORS.gold }}
-                    className="text-md uppercase tracking-[0.4em] font-medium"
-                    variants={fadeUp}
-                    custom={0}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.3 }}
-                >
-                    Nos spectacles
-                </motion.p>
-
-                <motion.div
-                    className="w-12 h-px"
-                    style={{ backgroundColor: COLORS.gold }}
-                    variants={fadeUp}
-                    custom={0.05}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.3 }}
-                />
-
-                <motion.p
-                    className="max-w-3xl text-sm md:text-base text-white/60 leading-relaxed text-justify"
-                    variants={fadeUp}
-                    custom={0.1}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.3 }}
-                >
-                    Les Têtes Nivoles proposent des spectacles vivants et lectures musicales contemporaines,
-                    inspirés des poèmes de Mickaël Crépin issus de <span className="italic">« De Boue et De Vent »</span>.
-                    Chaque création offre une expérience immersive entre poésie, voix et performance scénique,
-                    portée par nos lecteurs et lectrices dans une mise en espace vivante.
-
-                    <br />
-
-                    Les spectacles sont principalement gratuits, dans une démarche d’accès ouvert à la création artistique.
-                </motion.p>
-
-
+                    <motion.div
+                        className="w-12 h-px"
+                        style={{ backgroundColor: COLORS.gold }}
+                        initial={{ opacity: 0, width: 0 }}
+                        whileInView={{ opacity: 1, width: 48 }}
+                        transition={{ duration: 0.6 }}
+                    />
+                </header>
             </div>
 
+            {/* UPCOMING */}
             <section className="max-w-7xl mx-auto mb-24">
-
-                <h2 className="text-white uppercase tracking-[0.5em] text-md  md:text-base font-normal pb-5">
+                <h2 className="text-white uppercase tracking-[0.4em] mb-6">
                     À venir
                 </h2>
 
                 {upcoming.length === 0 ? (
-                    <p className="text-white/60 text-sm italic mt-6">
-                        Aucun événement à venir pour le moment. Revenez bientôt pour découvrir nos prochaines dates.
-                    </p>
+                    <EmptyUpcoming />
                 ) : (
-                    <div className="mt-4 grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-3 gap-6">
                         {upcomingToShow.map((event, i) => (
                             <UpcomingCard key={event.id} event={event} index={i} />
                         ))}
                     </div>
                 )}
 
-                {!showMoreUpcoming && upcoming.length > 3 && (
-                    <div className="mt-12 flex justify-center">
+                {upcoming.length > 3 && (
+                    <div className="flex justify-center mt-10">
                         <button
-                            onClick={() => setShowMoreUpcoming(true)}
-                            className="px-8 py-3.5 text-sm tracking-[0.12em] uppercase font-semibold border border-[#CDA268] text-[#CDA268]"
-                            style={{
-                                backgroundColor: "transparent",
-                                boxShadow: "0 0 10px rgba(205,162,104,0.15)",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = "#CDA268";
-                                e.currentTarget.style.color = "#fff";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = "transparent";
-                                e.currentTarget.style.color = "#CDA268";
-                            }}
+                            onClick={() => setShowMoreUpcoming(v => !v)}
+                            className="text-[#CDA268] uppercase tracking-[0.25em] border-b border-[#CDA268]"
                         >
-                            Voir plus
+                            {showMoreUpcoming ? "Réduire" : "Voir plus"}
                         </button>
                     </div>
                 )}
             </section>
 
+            {/* ARCHIVE */}
             <section className="max-w-7xl mx-auto">
-
-                <h2 className="text-white uppercase tracking-[0.5em] text-sm md:text-base font-normal text-md pb-5">
+                <h2 className="text-white uppercase tracking-[0.4em] mb-6">
                     Archives
                 </h2>
 
-                <div className="mt-4 grid md:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-3 gap-6">
                     {pastToShow.map((event, i) => (
                         <ArchiveCard key={event.id} event={event} index={i} />
                     ))}
                 </div>
 
-                {!showMoreArchive && past.length > 3 && (
-                    <div className="mt-12 flex justify-center">
+                {past.length > 3 && (
+                    <div className="flex justify-center mt-10">
                         <button
-                            onClick={() => setShowMoreArchive(true)}
-                            className="px-8 py-3.5 text-sm tracking-[0.12em] uppercase font-semibold border border-[#CDA268] text-[#CDA268]"
-                            style={{
-                                backgroundColor: "transparent",
-                                boxShadow: "0 0 10px rgba(205,162,104,0.15)",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = "#CDA268";
-                                e.currentTarget.style.color = "#fff";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = "transparent";
-                                e.currentTarget.style.color = "#CDA268";
-                            }}
+                            onClick={() => setShowMoreArchive(v => !v)}
+                            className="text-[#CDA268] uppercase tracking-[0.25em] border-b border-[#CDA268]"
                         >
-                            Voir plus
+                            {showMoreArchive ? "Réduire" : "Voir plus"}
                         </button>
                     </div>
                 )}
             </section>
-            <Helmet>
-                <script type="application/ld+json">
-                    {JSON.stringify(schemaEvents)}
-                </script>
-            </Helmet>
         </section>
     );
 }

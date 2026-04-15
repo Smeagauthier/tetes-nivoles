@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useBooks } from "../../hooks/useBooks";
@@ -12,9 +12,12 @@ const COLORS = {
     night: "#070F2B",
 };
 
+/* ===================== BOOK CARD ===================== */
+
 function BookCard({ book, index }) {
     const [open, setOpen] = useState(false);
     const [ctaOpen, setCtaOpen] = useState(false);
+    const [expanded, setExpanded] = useState(false);
 
     const slides = [
         book.cover_image,
@@ -22,12 +25,6 @@ function BookCard({ book, index }) {
     ]
         .filter(Boolean)
         .map((src) => ({ src }));
-
-    useEffect(() => {
-        const handleClick = () => setCtaOpen(false);
-        if (ctaOpen) document.addEventListener("click", handleClick);
-        return () => document.removeEventListener("click", handleClick);
-    }, [ctaOpen]);
 
     return (
         <>
@@ -38,16 +35,17 @@ function BookCard({ book, index }) {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6, delay: index * 0.08 }}
             >
+                {/* COVER (RECTANGLE LIVRE) */}
                 <div className="flex-shrink-0 relative group">
 
                     <img
                         src={book.cover_image}
                         alt={book.title}
                         onClick={() => setOpen(true)}
-                        className="shadow-2xl object-cover cursor-pointer transition duration-300 group-hover:scale-102"
+                        className="shadow-2xl object-cover cursor-pointer transition duration-300 group-hover:scale-[1.02]"
                         style={{
-                            width: "clamp(250px, 25vw, 370px)",
-                            aspectRatio: "1 / 1",
+                            width: "clamp(260px, 28vw, 420px)",
+                            aspectRatio: "3 / 4",
                         }}
                     />
 
@@ -56,8 +54,7 @@ function BookCard({ book, index }) {
                             src={book.back_cover_image}
                             alt="4e de couverture"
                             onClick={() => setOpen(true)}
-                            className="absolute bottom-3 right-3 w-16 h-16 object-cover border shadow-lg transition-all duration-300
-                       group-hover:scale-102 opacity-90"
+                            className="absolute bottom-3 right-3 w-16 h-16 object-cover border shadow-lg opacity-90"
                             style={{
                                 borderColor: "#CDA268",
                                 backgroundColor: "#070F2B",
@@ -66,6 +63,7 @@ function BookCard({ book, index }) {
                     )}
                 </div>
 
+                {/* TEXT CONTENT */}
                 <div className="flex flex-col gap-5 flex-1 text-center md:text-left">
 
                     <div className="flex flex-col gap-1">
@@ -86,6 +84,7 @@ function BookCard({ book, index }) {
                         )}
                     </div>
 
+                    {/* TITLE */}
                     <h2
                         className="text-white font-light tracking-widest uppercase"
                         style={{
@@ -96,13 +95,16 @@ function BookCard({ book, index }) {
                         {book.title}
                     </h2>
 
+                    {/* ANIMATED UNDERLINE (comme tes autres sections) */}
                     <motion.div
                         className="h-px"
                         style={{ backgroundColor: COLORS.night }}
-                        initial={{ width: "40px" }}
-                        whileInView={{ width: "120px" }}
+                        initial={{ opacity: 0, width: 0 }}
+                        whileInView={{ opacity: 1, width: 120 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
                     />
 
+                    {/* QUOTE */}
                     <p
                         className="italic"
                         style={{
@@ -113,16 +115,53 @@ function BookCard({ book, index }) {
                         {book.quote}
                     </p>
 
-                    <p
-                        className="leading-relaxed text-justify"
-                        style={{
-                            color: "rgba(255,255,255,0.75)",
-                            maxWidth: "600px",
-                        }}
-                    >
-                        {book.description}
-                    </p>
+                    {/* DESCRIPTION + READ MORE */}
+                    <div className="relative max-w-[600px]">
 
+                        <motion.div
+                            initial={false}
+                            animate={{
+                                height: expanded ? "auto" : "6.5em",
+                            }}
+                            transition={{ duration: 0.4, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                        >
+                            <motion.p
+                                initial={false}
+                                animate={{
+                                    opacity: 1,
+                                    y: 0,
+                                }}
+                                transition={{ duration: 0.25, ease: "easeOut" }}
+                                className="leading-relaxed text-justify"
+                                style={{
+                                    color: "rgba(255,255,255,0.75)",
+                                }}
+                            >
+                                {book.description}
+                            </motion.p>
+                        </motion.div>
+
+                        {/* fade gradient quand c'est fermé */}
+                        {!expanded && (
+                            <div className="absolute bottom-8 left-0 right-0 h-12 bg-gradient-to-t from-[#A26721] to-transparent pointer-events-none" />
+                        )}
+
+                        <button
+                            type="button"
+                            onClick={() => setExpanded(!expanded)}
+                            className="
+            mt-3 text-xs uppercase tracking-[0.3em]
+            text-white/70 hover:text-white transition
+            underline decoration-white/40 hover:decoration-white
+        "
+                        >
+                            {expanded ? "Réduire" : "En savoir plus"}
+                        </button>
+
+                    </div>
+
+                    {/* CTA LINKS */}
                     {(book.amazon_url || book.fnac_url || book.edilivre_url) && (
                         <div className="relative mt-2 inline-block">
 
@@ -137,86 +176,53 @@ function BookCard({ book, index }) {
                                     color: COLORS.night,
                                 }}
                             >
-                                {/* hover background animé */}
-                                <span
-                                    className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
-                                    style={{ backgroundColor: COLORS.night }}
+                                <span className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
+                                      style={{ backgroundColor: COLORS.night }}
                                 />
 
-                                <span className="relative transition-colors duration-300 group-hover:text-[#CDA268] cursor-pointer">
+                                <span className="relative group-hover:text-[#CDA268]">
                                     Découvrir l'ouvrage
                                 </span>
 
-                                <span className="relative flex items-center">
-                                    <FontAwesomeIcon
-                                        icon={faChevronDown}
-                                        className={`transition-transform duration-300 ${
-                                            ctaOpen ? "rotate-180" : ""
-                                        } group-hover:text-[#CDA268]`}
-                                        style={{ fontSize: "10px" }}
-                                    />
-                                </span>
+                                <FontAwesomeIcon
+                                    icon={faChevronDown}
+                                    className={`transition-transform duration-300 ${ctaOpen ? "rotate-180" : ""}`}
+                                    style={{ fontSize: "10px" }}
+                                />
                             </button>
 
                             {ctaOpen && (
                                 <div
-                                    className="absolute mt-3 flex flex-col min-w-[200px] border shadow-lg overflow-hidden"
+                                    className="absolute mt-3 flex flex-col min-w-[200px] shadow-lg overflow-hidden"
                                     style={{
                                         border: "2px solid rgba(0,0,0,0.15)",
                                         backgroundColor: COLORS.gold,
                                     }}
                                 >
                                     {book.amazon_url && (
-                                        <a
-                                            href={book.amazon_url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="px-4 py-3 text-xs uppercase tracking-widest transition-all duration-200 relative overflow-hidden group"
-                                            style={{ color: COLORS.night }}
+                                        <a className="px-4 py-3 text-xs uppercase tracking-widest hover:bg-[#070F2B] hover:text-[#CDA268] transition"
+                                           href={book.amazon_url}
+                                           target="_blank"
                                         >
-                                        <span
-                                            className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
-                                            style={{ backgroundColor: COLORS.night }}
-                                        />
-                                        <span className="relative transition-colors duration-300 group-hover:text-[#CDA268]">
                                             Amazon
-                                        </span>
                                         </a>
                                     )}
 
                                     {book.fnac_url && (
-                                        <a
-                                            href={book.fnac_url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="px-4 py-3 text-xs uppercase tracking-widest transition-all duration-200 relative overflow-hidden group"
-                                            style={{ color: COLORS.night }}
+                                        <a className="px-4 py-3 text-xs uppercase tracking-widest hover:bg-[#070F2B] hover:text-[#CDA268] transition"
+                                           href={book.fnac_url}
+                                           target="_blank"
                                         >
-                                        <span
-                                            className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
-                                            style={{ backgroundColor: COLORS.night }}
-                                        />
-                                        <span className="relative transition-colors duration-300 group-hover:text-[#CDA268]">
                                             Fnac
-                                        </span>
                                         </a>
                                     )}
 
                                     {book.edilivre_url && (
-                                        <a
-                                            href={book.edilivre_url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="px-4 py-3 text-xs uppercase tracking-widest transition-all duration-200 relative overflow-hidden group"
-                                            style={{ color: COLORS.night }}
+                                        <a className="px-4 py-3 text-xs uppercase tracking-widest hover:bg-[#070F2B] hover:text-[#CDA268] transition"
+                                           href={book.edilivre_url}
+                                           target="_blank"
                                         >
-                                        <span
-                                            className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
-                                            style={{ backgroundColor: COLORS.night }}
-                                        />
-                                        <span className="relative transition-colors duration-300 group-hover:text-[#CDA268]">
                                             Edilivre
-                                        </span>
                                         </a>
                                     )}
                                 </div>
@@ -230,39 +236,35 @@ function BookCard({ book, index }) {
                 open={open}
                 close={() => setOpen(false)}
                 slides={slides}
-                controller={{
-                    closeOnBackdropClick: true,
-                }}
+                controller={{ closeOnBackdropClick: true }}
             />
         </>
     );
 }
 
+/* ===================== SECTION ===================== */
 
 export default function Books() {
     const { books, loading, error } = useBooks();
 
-    if (loading) return null;
-    if (error) return null;
+    if (loading || error) return null;
 
     return (
         <section
             id="books"
+            className="flex flex-col items-center px-8 md:px-16 bg-[#A26721]"
             style={{
-                backgroundColor: "#A26721",
                 paddingTop: "clamp(40px, 12vw, 120px)",
-                paddingBottom: "clamp(40px, 12vw, 120px)"
+                paddingBottom: "clamp(40px, 12vw, 120px)",
             }}
-            className="flex bg-gold-section flex-col items-center px-8 md:px-16"
         >
-            <div className="w-full max-w-7xl flex flex-col gap-10">
+
+            {/* HEADER ANIMÉ IDENTIQUE À TES AUTRES SECTIONS */}
+            <header className="w-full max-w-7xl flex flex-col gap-4 mb-10">
 
                 <motion.p
                     className="text-md uppercase tracking-[0.4em] font-medium"
                     style={{ color: COLORS.night }}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
                 >
                     Le recueil
                 </motion.p>
@@ -270,12 +272,11 @@ export default function Books() {
                 <motion.div
                     className="w-12 h-px"
                     style={{ backgroundColor: COLORS.night }}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5 }}
-                    viewport={{ once: true, amount: 0.3 }}
+                    initial={{ opacity: 0, width: 0 }}
+                    whileInView={{ opacity: 1, width: 48 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
                 />
-            </div>
+            </header>
 
             <div className="w-full max-w-7xl mt-16 flex flex-col gap-32">
                 {books.map((book, index) => (
