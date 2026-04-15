@@ -5,12 +5,9 @@ export default function Home() {
     return (
         <>
             <Navbar />
-
             <section id="home">
                 <Hero />
             </section>
-
-
         </>
     );
 }

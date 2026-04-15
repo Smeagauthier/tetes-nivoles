@@ -75,7 +75,7 @@ function ArchiveCard({ event, index }) {
     return (
         <>
             <Helmet>
-                <title>Événements | Têtes Nivoles</title>
+                <title>Têtes Nivoles</title>
                 <meta
                     name="description"
                     content="Découvrez les événements des Têtes Nivoles : spectacles, archives et artistes."
@@ -192,7 +192,6 @@ function ArchiveCard({ event, index }) {
     );
 }
 
-/* ───────────────────────── PAGE ───────────────────────── */
 
 export default function Events() {
     const { events, loading, error } = useEvents();

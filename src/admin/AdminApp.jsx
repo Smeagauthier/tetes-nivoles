@@ -21,6 +21,11 @@ import EventListDraggable   from './resources/events/EventList';
 import EventEdit            from './resources/events/EventEdit';
 import EventCreate          from './resources/events/EventCreate';
 
+//Heros
+import HeroListDraggable   from './resources/heros/HeroList';
+import HeroEdit            from './resources/heros/HeroEdit';
+import HeroCreate          from './resources/heros/HeroCreate';
+
 const i18nProvider = polyglotI18nProvider(() => frenchMessages, 'fr');
 
 const authProvider = {
@@ -40,6 +45,7 @@ const authProvider = {
 const MemberListPage = () => <List pagination={false}><MemberListDraggable /></List>;
 const BookListPage   = () => <List pagination={false}><BookListDraggable /></List>;
 const EventListPage   = () => <List pagination={false}><EventListDraggable /></List>;
+const HeroListPage   = () => <List pagination={false}><HeroListDraggable /></List>;
 
 export default function AdminApp() {
     return (
@@ -52,6 +58,13 @@ export default function AdminApp() {
             basename="/admin"
             disableTelemetry
         >
+            <Resource
+                name="heros"
+                list={HeroListPage}
+                edit={HeroEdit}
+                create={HeroCreate}
+                options={{ label: 'Héros' }}
+            />
             <Resource
                 name="members"
                 list={MemberListPage}
