@@ -9,9 +9,9 @@ export default function MemberForm() {
         <SimpleForm>
 
             <BackButton />
-            <TextInput source="name"  label="Prénom - Nom" fullWidth  name={"name"}/>
-            <TextInput source="role"  label="Rôle"         fullWidth  name={"role"}/>
-            <TextInput source="bio"   label="Bio" multiline fullWidth  name={"bio"}/>
+            <TextInput source="name"  label="Prénom - Nom" fullWidth  />
+            <TextInput source="role"  label="Rôle"         fullWidth  />
+            <TextInput source="bio"   label="Bio" multiline fullWidth  />
             <ImageUploadInput
                 source="photo"
                 label="Photo"

@@ -65,7 +65,7 @@ export default function EventForm() {
             <TextInput source="booking_url" label="Lien de réservation" fullWidth  name={"booking"}/>
 
             {/* PUBLISHED */}
-            <BooleanInput source="is_published" label="Publié"  name={"published"}/>
+            <BooleanInput source="is_published" label="Publié" />
 
             {/* UPLOAD IMAGES (frontend simplifié) */}
             <ImageUploadInput
