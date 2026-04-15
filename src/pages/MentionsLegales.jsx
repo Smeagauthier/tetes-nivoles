@@ -1,4 +1,14 @@
+import {useEffect} from "react";
+
 export default function MentionsLegales() {
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    }, []);
+
     return (
         <div className="min-h-screen bg-[#070F2B] px-6 sm:px-10 md:px-16 py-28">
 

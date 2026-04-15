@@ -5,9 +5,9 @@ import Members  from "./components/sections/Members";
 import Books from "./components/sections/Books.jsx";
 import Contact from "./components/sections/Contact.jsx";
 import Events from "./components/sections/Events.jsx";
-import Footer from "./components/layout/Footer.jsx";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "react-hot-toast";
+import React from "react";
 
 
 export default function Site() {
