@@ -37,13 +37,12 @@ export default function EventMeta({ event }) {
                 </div>
                 )}
 
-<div className="flex items-center gap-2">
-    <FontAwesomeIcon icon={faTicket} style={{ color: COLORS.gold }} />
-    <span style={{ fontWeight: isFree ? "bold" : "normal", color: isFree ? COLORS.gold : undefined }}>
-                    {priceLabel}
-                </span>
-</div>
-
+                <div className="flex items-center gap-2">
+                    <FontAwesomeIcon icon={faTicket} style={{ color: COLORS.gold }} />
+                    <span style={{ fontWeight: isFree ? "bold" : "normal", color: isFree ? COLORS.gold : undefined }}>
+                        {priceLabel}
+                    </span>
+                </div>
 </div>
 );
 }

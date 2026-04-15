@@ -47,7 +47,7 @@ export default function EventForm() {
             <TextInput source="title" label="Titre de l'événement" fullWidth />
 
             {/* SPECTACLE */}
-            <TextInput source="show_name" label="Nom du spectacle" fullWidth />
+            {/*<TextInput source="show_name" label="Nom du spectacle" fullWidth />*/}
 
             {/* DESCRIPTION */}
             <TextInput source="description" label="Description" multiline fullWidth />

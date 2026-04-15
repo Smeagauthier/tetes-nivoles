@@ -105,3 +105,10 @@ html {
 .member-card:hover .member-photo {
     filter: grayscale(0%) brightness(1) sepia(20%);
 }
+
+mark {
+    background: transparent;
+    font-weight: 500;
+    font-style: normal;
+    color: rgba(255,255,255,0.7);
+}

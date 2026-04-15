@@ -12,8 +12,6 @@ const COLORS = {
     night: "#070F2B",
 };
 
-/* ───────────────────── BOOK CARD ───────────────────── */
-
 function BookCard({ book, index }) {
     const [open, setOpen] = useState(false);
     const [ctaOpen, setCtaOpen] = useState(false);
@@ -25,7 +23,6 @@ function BookCard({ book, index }) {
         .filter(Boolean)
         .map((src) => ({ src }));
 
-    // fermer dropdown si clic ailleurs
     useEffect(() => {
         const handleClick = () => setCtaOpen(false);
         if (ctaOpen) document.addEventListener("click", handleClick);
@@ -41,22 +38,19 @@ function BookCard({ book, index }) {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6, delay: index * 0.08 }}
             >
-                {/* COVER */}
                 <div className="flex-shrink-0 relative group">
 
-                    {/* COVER PRINCIPALE */}
                     <img
                         src={book.cover_image}
                         alt={book.title}
                         onClick={() => setOpen(true)}
                         className="shadow-2xl object-cover cursor-pointer transition duration-300 group-hover:scale-102"
                         style={{
-                            width: "clamp(200px, 22vw, 320px)",
+                            width: "clamp(250px, 25vw, 370px)",
                             aspectRatio: "1 / 1",
                         }}
                     />
 
-                    {/* 4E DE COUVERTURE (SYNC HOVER) */}
                     {book.back_cover_image && (
                         <img
                             src={book.back_cover_image}
@@ -72,10 +66,8 @@ function BookCard({ book, index }) {
                     )}
                 </div>
 
-                {/* TEXT */}
                 <div className="flex flex-col gap-5 flex-1 text-center md:text-left">
 
-                    {/* AUTHOR + YEAR */}
                     <div className="flex flex-col gap-1">
                         <span
                             className="text-xs tracking-[0.4em] uppercase"
@@ -94,7 +86,6 @@ function BookCard({ book, index }) {
                         )}
                     </div>
 
-                    {/* TITLE */}
                     <h2
                         className="text-white font-light tracking-widest uppercase"
                         style={{
@@ -105,7 +96,6 @@ function BookCard({ book, index }) {
                         {book.title}
                     </h2>
 
-                    {/* LINE */}
                     <motion.div
                         className="h-px"
                         style={{ backgroundColor: COLORS.night }}
@@ -113,7 +103,6 @@ function BookCard({ book, index }) {
                         whileInView={{ width: "120px" }}
                     />
 
-                    {/* QUOTE */}
                     <p
                         className="italic"
                         style={{
@@ -121,10 +110,9 @@ function BookCard({ book, index }) {
                             maxWidth: "560px",
                         }}
                     >
-                        “{book.quote}”
+                        {book.quote}
                     </p>
 
-                    {/* DESCRIPTION */}
                     <p
                         className="leading-relaxed text-justify"
                         style={{
@@ -135,11 +123,9 @@ function BookCard({ book, index }) {
                         {book.description}
                     </p>
 
-                    {/* ───────── CTA PREMIUM ───────── */}
                     {(book.amazon_url || book.fnac_url || book.edilivre_url) && (
                         <div className="relative mt-2 inline-block">
 
-                            {/* BUTTON */}
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -157,24 +143,21 @@ function BookCard({ book, index }) {
                                     style={{ backgroundColor: COLORS.night }}
                                 />
 
-                                {/* texte */}
                                 <span className="relative transition-colors duration-300 group-hover:text-[#CDA268] cursor-pointer">
-                Découvrir l'ouvrage
-            </span>
+                                    Découvrir l'ouvrage
+                                </span>
 
-                                {/* CHEVRON FONT AWESOME */}
                                 <span className="relative flex items-center">
-                <FontAwesomeIcon
-                    icon={faChevronDown}
-                    className={`transition-transform duration-300 ${
-                        ctaOpen ? "rotate-180" : ""
-                    } group-hover:text-[#CDA268]`}
-                    style={{ fontSize: "10px" }}
-                />
-            </span>
+                                    <FontAwesomeIcon
+                                        icon={faChevronDown}
+                                        className={`transition-transform duration-300 ${
+                                            ctaOpen ? "rotate-180" : ""
+                                        } group-hover:text-[#CDA268]`}
+                                        style={{ fontSize: "10px" }}
+                                    />
+                                </span>
                             </button>
 
-                            {/* DROPDOWN */}
                             {ctaOpen && (
                                 <div
                                     className="absolute mt-3 flex flex-col min-w-[200px] border shadow-lg overflow-hidden"
@@ -191,13 +174,13 @@ function BookCard({ book, index }) {
                                             className="px-4 py-3 text-xs uppercase tracking-widest transition-all duration-200 relative overflow-hidden group"
                                             style={{ color: COLORS.night }}
                                         >
-                        <span
-                            className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
-                            style={{ backgroundColor: COLORS.night }}
-                        />
-                                            <span className="relative transition-colors duration-300 group-hover:text-[#CDA268]">
-                            Amazon
-                        </span>
+                                        <span
+                                            className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
+                                            style={{ backgroundColor: COLORS.night }}
+                                        />
+                                        <span className="relative transition-colors duration-300 group-hover:text-[#CDA268]">
+                                            Amazon
+                                        </span>
                                         </a>
                                     )}
 
@@ -209,13 +192,13 @@ function BookCard({ book, index }) {
                                             className="px-4 py-3 text-xs uppercase tracking-widest transition-all duration-200 relative overflow-hidden group"
                                             style={{ color: COLORS.night }}
                                         >
-                        <span
-                            className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
-                            style={{ backgroundColor: COLORS.night }}
-                        />
-                                            <span className="relative transition-colors duration-300 group-hover:text-[#CDA268]">
-                            Fnac
-                        </span>
+                                        <span
+                                            className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
+                                            style={{ backgroundColor: COLORS.night }}
+                                        />
+                                        <span className="relative transition-colors duration-300 group-hover:text-[#CDA268]">
+                                            Fnac
+                                        </span>
                                         </a>
                                     )}
 
@@ -227,13 +210,13 @@ function BookCard({ book, index }) {
                                             className="px-4 py-3 text-xs uppercase tracking-widest transition-all duration-200 relative overflow-hidden group"
                                             style={{ color: COLORS.night }}
                                         >
-                        <span
-                            className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
-                            style={{ backgroundColor: COLORS.night }}
-                        />
-                                            <span className="relative transition-colors duration-300 group-hover:text-[#CDA268]">
-                            Edilivre
-                        </span>
+                                        <span
+                                            className="absolute inset-0 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
+                                            style={{ backgroundColor: COLORS.night }}
+                                        />
+                                        <span className="relative transition-colors duration-300 group-hover:text-[#CDA268]">
+                                            Edilivre
+                                        </span>
                                         </a>
                                     )}
                                 </div>
@@ -243,7 +226,6 @@ function BookCard({ book, index }) {
                 </div>
             </motion.div>
 
-            {/* LIGHTBOX */}
             <Lightbox
                 open={open}
                 close={() => setOpen(false)}
@@ -256,7 +238,6 @@ function BookCard({ book, index }) {
     );
 }
 
-/* ───────────────────── PAGE BOOKS ───────────────────── */
 
 export default function Books() {
     const { books, loading, error } = useBooks();
@@ -269,8 +250,8 @@ export default function Books() {
             id="books"
             style={{
                 backgroundColor: "#A26721",
-                paddingTop: "clamp(80px, 15vw, 200px)",
-                paddingBottom: "clamp(80px, 15vw, 200px)",
+                paddingTop: "clamp(40px, 12vw, 120px)",
+                paddingBottom: "clamp(40px, 12vw, 120px)"
             }}
             className="flex bg-gold-section flex-col items-center px-8 md:px-16"
         >

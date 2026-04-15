@@ -4,7 +4,6 @@ import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { Helmet } from "react-helmet-async";
 
-
 import { useEvents } from "../../hooks/useEvents";
 import { COLORS } from "../../constants/colors";
 import EventMeta from "../../components/events/EventMeta";
@@ -23,17 +22,6 @@ const fadeUp = {
         transition: { duration: 0.8, ease: "easeOut", delay },
     }),
 };
-
-const fadeLeft = {
-    hidden: { opacity: 0, x: 40 },
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: { duration: 0.9, ease: "easeOut" },
-    },
-};
-
-/* ───────────────────────── UPCOMING ───────────────────────── */
 
 function UpcomingCard({ event, index }) {
     return (
@@ -59,8 +47,6 @@ function UpcomingCard({ event, index }) {
     );
 }
 
-/* ───────────────────────── ARCHIVE ───────────────────────── */
-
 function ArchiveCard({ event, index }) {
     const [open, setOpen] = useState(false);
 
@@ -72,19 +58,26 @@ function ArchiveCard({ event, index }) {
             ? event.description.slice(0, 150).trim() + "…"
             : event.description;
 
+
     return (
         <>
             <Helmet>
-                <title>Têtes Nivoles</title>
+                <title>Événements | Têtes Nivoles – Spectacles & créations artistiques</title>
+
                 <meta
                     name="description"
-                    content="Découvrez les événements des Têtes Nivoles : spectacles, archives et artistes."
+                    content="Découvrez les événements des Têtes Nivoles : spectacles vivants, lectures et créations artistiques contemporaines."
                 />
 
-                {/* Open Graph */}
+                <link rel="canonical" href="https://tetes-nivoles.fr/#events" />
+
                 <meta property="og:title" content="Événements | Têtes Nivoles" />
-                <meta property="og:description" content="Spectacles, archives et artistes." />
+                <meta property="og:description" content="Spectacles, lectures musicales et créations artistiques." />
                 <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://tetes-nivoles.fr/#events" />
+                <meta property="og:image" content="https://tetes-nivoles.fr/og-image.jpg" />
+
+                <meta name="twitter:card" content="summary_large_image" />
             </Helmet>
 
             <motion.article
@@ -111,7 +104,6 @@ function ArchiveCard({ event, index }) {
                         loading="lazy"
                     />
 
-                    {/* overlay doux */}
                     <div
                         className="absolute inset-0"
                         style={{
@@ -122,7 +114,6 @@ function ArchiveCard({ event, index }) {
                     />
                 </div>
 
-                {/* CONTENT */}
                 <div className="p-6">
                     <h3 style={{ color: COLORS.gold }} className="text-lg uppercase tracking-widest">
                         {event.title}
@@ -136,7 +127,6 @@ function ArchiveCard({ event, index }) {
 
                     <EventMeta event={event} />
 
-                    {/* MINI GALLERY */}
                     {event.images?.length > 1 && (
                         <div className="flex gap-2 mt-4">
 
@@ -146,12 +136,11 @@ function ArchiveCard({ event, index }) {
                                     src={img.url}
                                     onClick={() => setOpen(true)}
                                     className="w-14 h-14 object-cover rounded cursor-pointer flex-shrink-0"
-                                    alt="Images du spectacle"
+                                    alt={`Spectacle Têtes Nivoles - ${event.title}`}
                                     loading="lazy"
                                 />
                             ))}
 
-                            {/* +X overlay si images restantes */}
                             {event.images.length > 5 && (
                                 <div
                                     onClick={() => setOpen(true)}
@@ -162,22 +151,16 @@ function ArchiveCard({ event, index }) {
                                         backgroundPosition: "center",
                                     }}
                                 >
-                                    {/* assombrissement */}
                                     <div className="absolute inset-0 bg-black/60" />
 
-                                    {/* texte +X */}
-                                    <span className="relative z-10">
-                    +{event.images.length - 4}
-                </span>
+                                    <span className="relative z-10">+{event.images.length - 4}</span>
                                 </div>
                             )}
-
                         </div>
                     )}
                 </div>
             </motion.article>
 
-            {/* ✅ LIGHTBOX FIX */}
             {open && (
                 <Lightbox
                     open={open}
@@ -213,15 +196,39 @@ export default function Events() {
         };
     }, [events]);
 
+    //SEO BOOST
+    const schemaEvents = useMemo(() => {
+        const published = events.filter(e => e.is_published);
+
+        return {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Événements Têtes Nivoles",
+            itemListElement: published.slice(0, 10).map((event, index) => ({
+                "@type": "Event",
+                position: index + 1,
+                name: event.title,
+                description: event.description || "",
+                image: event.images?.[0]?.url || "",
+                startDate: event.event_date,
+                eventAttendanceMode:
+                    "https://schema.org/OfflineEventAttendanceMode",
+                location: {
+                    "@type": "Place",
+                    name: "Têtes Nivoles"
+                }
+            }))
+        };
+    }, [events]);
+
     if (loading || error) return null;
 
     const upcomingToShow = upcoming.slice(0, showMoreUpcoming ? upcoming.length : 3);
     const pastToShow = past.slice(0, showMoreArchive ? past.length : 3);
 
     return (
-        <section style={{ background: COLORS.night }} className="px-6 md:px-16 py-32" id="events">
+        <section style={{ background: COLORS.night }} className="px-6 md:px-16 py-24" id="events">
 
-            {/* HEADER GLOBAL */}
             <div className="max-w-7xl mx-auto flex flex-col gap-12 mb-20">
 
                 <motion.p
@@ -233,10 +240,9 @@ export default function Events() {
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
                 >
-                    Nos activités
+                    Nos spectacles
                 </motion.p>
 
-                {/* Trait doré */}
                 <motion.div
                     className="w-12 h-px"
                     style={{ backgroundColor: COLORS.gold }}
@@ -247,20 +253,44 @@ export default function Events() {
                     viewport={{ once: true, amount: 0.3 }}
                 />
 
+                <motion.p
+                    className="max-w-3xl text-sm md:text-base text-white/60 leading-relaxed text-justify"
+                    variants={fadeUp}
+                    custom={0.1}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.3 }}
+                >
+                    Les Têtes Nivoles proposent des spectacles vivants et lectures musicales contemporaines,
+                    inspirés des poèmes de Mickaël Crépin issus de <span className="italic">« De Boue et De Vent »</span>.
+                    Chaque création offre une expérience immersive entre poésie, voix et performance scénique,
+                    portée par nos lecteurs et lectrices dans une mise en espace vivante.
+
+                    <br />
+
+                    Les spectacles sont principalement gratuits, dans une démarche d’accès ouvert à la création artistique.
+                </motion.p>
+
+
             </div>
 
-            {/* ───────── À VENIR ───────── */}
             <section className="max-w-7xl mx-auto mb-24">
 
                 <h2 className="text-white uppercase tracking-[0.5em] text-md  md:text-base font-normal pb-5">
                     À venir
                 </h2>
 
-                <div className="mt-4 grid md:grid-cols-3 gap-6">
-                    {upcomingToShow.map((event, i) => (
-                        <UpcomingCard key={event.id} event={event} index={i} />
-                    ))}
-                </div>
+                {upcoming.length === 0 ? (
+                    <p className="text-white/60 text-sm italic mt-6">
+                        Aucun événement à venir pour le moment. Revenez bientôt pour découvrir nos prochaines dates.
+                    </p>
+                ) : (
+                    <div className="mt-4 grid md:grid-cols-3 gap-6">
+                        {upcomingToShow.map((event, i) => (
+                            <UpcomingCard key={event.id} event={event} index={i} />
+                        ))}
+                    </div>
+                )}
 
                 {!showMoreUpcoming && upcoming.length > 3 && (
                     <div className="mt-12 flex justify-center">
@@ -286,7 +316,6 @@ export default function Events() {
                 )}
             </section>
 
-            {/* ───────── ARCHIVES ───────── */}
             <section className="max-w-7xl mx-auto">
 
                 <h2 className="text-white uppercase tracking-[0.5em] text-sm md:text-base font-normal text-md pb-5">
@@ -322,6 +351,11 @@ export default function Events() {
                     </div>
                 )}
             </section>
+            <Helmet>
+                <script type="application/ld+json">
+                    {JSON.stringify(schemaEvents)}
+                </script>
+            </Helmet>
         </section>
     );
 }

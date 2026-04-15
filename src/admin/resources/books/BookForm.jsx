@@ -9,6 +9,9 @@ export default function BookForm() {
             <TextInput source="published_year" label="Année"     fullWidth  />
             <TextInput source="quote"        label="Extrait"     multiline fullWidth  />
             <TextInput source="description"  label="Description" multiline fullWidth  />
+            <TextInput source="amazon_url"  label="Lien Amazon"  fullWidth  />
+            <TextInput source="fnac_url"  label="Lien FNAC"  fullWidth  />
+            <TextInput source="edilivre_url"  label="Lien Ediivre"  fullWidth  />
             <ImageUploadInput
                 source="cover_image"
                 label="Couverture"

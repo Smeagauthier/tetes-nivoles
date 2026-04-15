@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 import { useHeros } from "../../hooks/useHeros.js";
+import defaultImg from "/images/default-event.png";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
@@ -90,7 +91,7 @@ export default function Hero() {
 
                             <img
                                 ref={(el) => (imgRefs.current[index] = el)}
-                                src={img.url}
+                                src={img.url || defaultImg}
                                 alt={heroData.title || "hero image"}
                                 loading={index === 0 ? "eager" : "lazy"}
                                 fetchPriority={index === 0 ? "high" : "low"}

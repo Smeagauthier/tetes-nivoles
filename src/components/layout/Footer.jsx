@@ -9,10 +9,8 @@ export default function Footer() {
     return (
         <footer className="bg-[#040a1a] border-t border-[#CDA268]/10">
 
-            {/* TOP */}
             <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 pt-10 pb-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
 
-                {/* Logo */}
                 <a
                     href="/"
                     className="flex flex-col items-center md:items-start gap-2 text-center md:text-left"
@@ -22,12 +20,8 @@ export default function Footer() {
                         alt="Les Têtes Nivoles"
                         className="h-14 sm:h-16 w-auto object-contain"
                     />
-                    <p className="text-[#CDA268]/60 text-xs tracking-[0.15em]">
-                        Les Têtes Nivoles
-                    </p>
                 </a>
 
-                {/* Mentions */}
                 <nav
                     aria-label="Mentions légales"
                     className="flex flex-col md:flex-row items-center gap-3 md:gap-6"
@@ -43,21 +37,18 @@ export default function Footer() {
                 </nav>
             </div>
 
-            {/* PHRASE SEO */}
             <div className="max-w-3xl mx-auto px-6 text-center pb-8">
                 <p className="text-white/40 text-xs sm:text-sm italic leading-relaxed">
                     Collectif artistique français dédié à la poésie contemporaine, aux performances scéniques et à la création littéraire.
                 </p>
             </div>
 
-            {/* BOTTOM */}
             <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 pb-10 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-6">
 
                 <p className="text-white/25 text-xs tracking-wider text-center sm:text-left">
                     © {year} Les Têtes Nivoles — Tous droits réservés
                 </p>
 
-                {/* Socials */}
                 <div className="flex gap-4 sm:gap-3">
                     {SOCIAL_LINKS.map((link) => (
                         <SocialLink key={link.name} link={link} />

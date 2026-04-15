@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { aboutData } from "../../data/about";
 import troupe from "../../assets/images/troupe.jpg";
+import RichText from "../ui/RichText.jsx";
 
 const fadeUp = {
     hidden: { opacity: 0, y: 32 },
@@ -31,17 +32,15 @@ export default function About() {
             id="about"
             style={{
                 backgroundColor: COLORS.night,
-                paddingTop: "clamp(50px, 12vw, 150px)",
-                paddingBottom: "clamp(50px, 12vw, 150px)"
+                paddingTop: "clamp(40px, 12vw, 120px)",
+                paddingBottom: "clamp(40px, 12vw, 120px)"
             }}
             className="flex justify-center px-8 md:px-16"
         >
             <div className="w-full max-w-7xl flex flex-col md:flex-row gap-28 items-center">
 
-                {/* ── Colonne gauche : texte ── */}
                 <div className="flex-1 flex flex-col gap-12">
 
-                    {/* Surtitre */}
                     <motion.p
                         style={{ color: COLORS.gold }}
                         className="text-md uppercase tracking-[0.4em] font-medium"
@@ -54,7 +53,6 @@ export default function About() {
                         La compagnie
                     </motion.p>
 
-                    {/* Trait doré */}
                     <motion.div
                         className="w-12 h-px"
                         style={{ backgroundColor: COLORS.gold }}
@@ -65,19 +63,17 @@ export default function About() {
                         viewport={{ once: true, amount: 0.3 }}
                     />
 
-                    {/* Intro */}
                     <motion.p
-                        className="text-2xl md:text-3xl font-light leading-relaxed text-white text-justify"
+                        className="text-2xl md:text-3xl font-light leading-relaxed text-gray-200 text-justify"
                         variants={fadeUp}
                         custom={0.1}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, amount: 0.3 }}
                     >
-                        {aboutData.intro}
+                        <RichText segments={aboutData.intro} />
                     </motion.p>
 
-                    {/* Corps */}
                     <motion.p
                         className="text-lg leading-loose text-justify"
                         style={{ color: "rgba(255,255,255,0.5)" }}
@@ -87,11 +83,22 @@ export default function About() {
                         whileInView="visible"
                         viewport={{ once: true, amount: 0.3 }}
                     >
-                        {aboutData.body}
+                        <RichText segments={aboutData.body} />
+                    </motion.p>
+
+                    <motion.p
+                        className="text-lg leading-loose text-justify"
+                        style={{ color: "rgba(255,255,255,0.5)" }}
+                        variants={fadeUp}
+                        custom={0.3}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.3 }}
+                    >
+                        <RichText segments={aboutData.body2} />
                     </motion.p>
                 </div>
 
-                {/* ── Colonne droite : image grande ── */}
                 <motion.div
                     className="flex-shrink-0 flex items-center justify-center"
                     variants={fadeLeft}
@@ -109,16 +116,12 @@ export default function About() {
                             alt="La compagnie des Têtes Nivoles"
                             className="relative z-10 w-full max-w-lg object-contain block"
                         />
-                        {/* Copyright */}
-                        <p
-                            className="absolute bottom-2 right-2 z-20 text-[12px] tracking-wide"
-                            style={{ color: "rgba(255,255,255,0.9)" }}
-                        >
+                        <p className="absolute bottom-2 right-2 z-20 text-[12px] tracking-wide"
+                            style={{ color: "rgba(255,255,255,0.9)" }}>
                             © La Voix du Nord
                         </p>
                     </div>
                 </motion.div>
-
             </div>
         </section>
     );
