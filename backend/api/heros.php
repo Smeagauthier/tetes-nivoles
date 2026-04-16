@@ -10,7 +10,7 @@ header("Content-Type: application/json; charset=UTF-8");
 require_once __DIR__ . '/../middlewares/cors.php';
 require_once __DIR__ . '/../config/db.php';
 
-require_once "auth.php";
+//require_once "auth.php";
 
 $user = requireAuth();
 
