@@ -1,6 +1,5 @@
 <?php
 
-
 ini_set('display_errors', 0); // important en prod
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/php-error.log');
