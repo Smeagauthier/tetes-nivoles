@@ -1,19 +1,7 @@
 RewriteEngine On
-RewriteBase /
 
-# ----------------------------
-# 1. API PHP = NE PAS TOUCHER
-# ----------------------------
-RewriteRule ^api/ - [L]
+RewriteRule ^api/(.*)$ backend/api/$1 [L,QSA]
 
-# ----------------------------
-# 2. fichiers existants (css, js, php, images)
-# ----------------------------
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-# ----------------------------
-# 3. React fallback
-# ----------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.html [L]
