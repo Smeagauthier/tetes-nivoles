@@ -1,6 +1,8 @@
 <?php
 $DEV_MODE = true;
-$autoload = __DIR__ . '/../../backend/vendor/autoload.php';
+$base = dirname(__DIR__, 2); // remonte jusqu'à /tetes-nivoles
+
+$autoload = $base . '/backend/vendor/autoload.php';
 
 if (!file_exists($autoload)) {
     die(json_encode([
@@ -8,8 +10,6 @@ if (!file_exists($autoload)) {
         "path" => $autoload
     ]));
 }
-
-require_once $autoload;
 
 require_once $autoload;
 use Firebase\JWT\JWT;
