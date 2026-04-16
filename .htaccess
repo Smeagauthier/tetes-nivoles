@@ -1,10 +1,14 @@
-RewriteEngine On
-
-RewriteBase /
-
-# laisser passer les vrais fichiers (PHP, assets, etc)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
 # sinon React prend le relais
 RewriteRule . /index.html [L]
+
+RewriteEngine On
+
+# Ne pas toucher aux fichiers PHP
+RewriteCond %{REQUEST_URI} !^/api/
+
+# Si fichier existe → OK
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Sinon → React
+RewriteRule ^ index.html [L]
