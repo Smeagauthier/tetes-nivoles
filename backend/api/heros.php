@@ -1,4 +1,13 @@
 <?php
+
+
+ini_set('display_errors', 0); // important en prod
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/php-error.log');
+error_reporting(E_ALL);
+
+header("Content-Type: application/json; charset=UTF-8");
+
 require_once __DIR__ . '/../middlewares/cors.php';
 require_once __DIR__ . '/../config/db.php';
 
@@ -33,7 +42,7 @@ try {
     // =========================
     if ($method === 'GET' && !$id) {
 
-        $stmt = $pdo->query("SELECT * FROM hero ORDER BY id DESC");
+        $stmt = $pdo->query("SELECT * FROM hero ORDER BY id ASC");
         $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($heroes as &$hero) {
