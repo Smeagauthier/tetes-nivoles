@@ -23,6 +23,9 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $method = $_SERVER['REQUEST_METHOD'];
 $id     = $_GET['id'] ?? null;
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 try {
 
     // =========================
