@@ -1,13 +1,15 @@
 <?php
 $DEV_MODE = true;
-$autoload = __DIR__ . '/../vendor/autoload.php';
+$autoload = __DIR__ . '/../../backend/vendor/autoload.php';
 
 if (!file_exists($autoload)) {
     die(json_encode([
-        "error" => "autoload missing",
+        "error" => "autoload not found",
         "path" => $autoload
     ]));
 }
+
+require_once $autoload;
 
 require_once $autoload;
 use Firebase\JWT\JWT;
