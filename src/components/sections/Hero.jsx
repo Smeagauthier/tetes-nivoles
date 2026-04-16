@@ -98,7 +98,6 @@ export default function Hero() {
 
                 <div className="flex flex-col items-center md:items-start">
 
-                    {/* HERO TITLE - ANIMATION UNIQUE */}
                     <h1
                         data-aos="fade"
                         data-aos-duration="1200"
@@ -108,7 +107,7 @@ export default function Hero() {
                             fontSize: "clamp(2.2rem, 6vw, 5rem)",
                         }}
                     >
-                        {heroData.title || "« L'art est une maison habitée »"}
+                        « L'art est une maison habitée »
                     </h1>
 
                     {/* SUBTITLE - MÊME ANIMATION */}
