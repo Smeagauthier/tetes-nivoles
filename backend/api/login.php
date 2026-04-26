@@ -17,7 +17,7 @@ $input = json_decode(file_get_contents("php://input"), true);
 $username = $input['username'] ?? '';
 $password = $input['password'] ?? '';
 
-if ($username !== "adminTN" || $password !== "tetes2026") {
+if ($username !== "Octaveprunille" || $password !== "tetesnivoles1789") {
     http_response_code(401);
     echo json_encode(["error" => "Invalid credentials"]);
     exit;
