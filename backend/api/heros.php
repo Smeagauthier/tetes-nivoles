@@ -22,10 +22,11 @@ header("Access-Control-Allow-Headers: Content-Type");
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit(0); }
 
 $pdo = new PDO(
-    "mysql:host=localhost;dbname=tetes-nivoles;charset=utf8mb4",
-    "root",
-    ""
+    "mysql:host=" . $_ENV['DB_HOST'] . ";dbname=" . $_ENV['DB_NAME'] . ";charset=utf8mb4",
+    $_ENV['DB_USER'],
+    $_ENV['DB_PASS']
 );
+
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $method = $_SERVER['REQUEST_METHOD'];

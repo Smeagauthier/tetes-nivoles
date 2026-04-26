@@ -20,6 +20,12 @@ export default function Hero() {
     const images = heroData?.images ?? [];
     const canLoop = images.length > 1;
 
+    if (!heroData) return (
+        <div className="h-screen bg-black flex items-center justify-center text-white">
+            Aucun contenu disponible
+        </div>
+    );
+
     const resetAnimations = (realIndex) => {
         setActiveIndex(realIndex);
 
@@ -107,7 +113,7 @@ export default function Hero() {
                             fontSize: "clamp(2.2rem, 6vw, 5rem)",
                         }}
                     >
-                        « L'art est une maison habitée »
+                        {heroData.title || "« L'art est une maison habitée »"}
                     </h1>
 
                     {/* SUBTITLE - MÊME ANIMATION */}

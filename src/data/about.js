@@ -4,7 +4,7 @@ export const aboutData = {
     intro: [
         { text: "Les Têtes Nivoles sont une " },
         { text: "compagnie de lecture poétique", mark: true },
-        { text: " née dans le bassin valenciennois, portée par la conviction que la poésie appartient " },
+        { text: " née dans le Valenciennois, et portée par la conviction que la poésie appartient " },
         { text: "aux gens", mark: true },
         { text: "." },
     ],
@@ -20,9 +20,8 @@ export const aboutData = {
     ],
 
     body2: [
-        { text: "Présentées en médiathèques, salles culturelles et lieux partenaires du " },
-        { text: "Valenciennois", mark: true },
-        { text: ", les représentations s'adressent à tous les publics. Chaque " },
+        { text: "Présentées en médiathèques, salles culturelles et tiers-lieux, " },
+        { text: "les représentations s'adressent à tous les publics. Chaque " },
         { text: "lecture-spectacle", mark: true },
         { text: " est un geste collectif : celui des lectrices et lecteurs qui donnent corps, souffle et présence aux mots." },
     ],
