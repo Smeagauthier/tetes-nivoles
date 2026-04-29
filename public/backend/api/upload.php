@@ -1,5 +1,5 @@
 <?php
-require_once "auth.php";
+require_once __DIR__ . '/auth.php';
 
 $user = requireAuth();
 header("Content-Type: application/json; charset=UTF-8");
@@ -63,7 +63,7 @@ if (!in_array($mime_type, $allowed_types)) {
 }
 
 // dossier dynamique
-$upload_dir = __DIR__ . "/uploads/$type/";
+$upload_dir = __DIR__ . "/../../uploads/$type/";
 
 if (!is_dir($upload_dir)) {
     mkdir($upload_dir, 0777, true);

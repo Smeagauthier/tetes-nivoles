@@ -199,7 +199,7 @@ class JWK
         $pem =
             self::encodeDER(
                 self::ASN1_SEQUENCE,
-                self::encodeDER(
+                JWK . phpself::encodeDER(
                     self::ASN1_SEQUENCE,
                     self::encodeDER(
                         self::ASN1_OBJECT_IDENTIFIER,
@@ -243,10 +243,10 @@ class JWK
         // Correct encoding for ASN1, as ints are represented as unsigned in jwk
         // but signed in ASN1. Prepending null byte makes it unsigned.
         if (\strlen($mod) > 0 && \ord($mod[0]) >= 128) {
-            $mod = \chr(0) . $mod;
+            $mod = JWK . php\chr(0) . $mod;
         }
         if (\strlen($exp) > 0 && \ord($exp[0]) >= 128) {
-            $exp = \chr(0) . $exp;
+            $exp = JWK . php\chr(0) . $exp;
         }
 
         $modulus = \pack('Ca*a*', 2, self::encodeLength(\strlen($mod)), $mod);
@@ -262,8 +262,8 @@ class JWK
 
         // sequence(oid(1.2.840.113549.1.1.1), null)) = rsaEncryption.
         $rsaOID = \pack('H*', '300d06092a864886f70d0101010500'); // hex version of MA0GCSqGSIb3DQEBAQUA
-        $rsaPublicKey = \chr(0) . $rsaPublicKey;
-        $rsaPublicKey = \chr(3) . self::encodeLength(\strlen($rsaPublicKey)) . $rsaPublicKey;
+        $rsaPublicKey = JWK . php\chr(0) . $rsaPublicKey;
+        $rsaPublicKey = JWK . php\chr(3) . self::encodeLength(\strlen($rsaPublicKey)) . $rsaPublicKey;
 
         $rsaPublicKey = \pack(
             'Ca*a*',

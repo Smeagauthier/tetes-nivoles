@@ -1,12 +1,7 @@
 <?php
 $DEV_MODE = true;
 
-// A COMMENTER EN PROD
-$base = dirname(__DIR__, 2); // remonte jusqu'à /tetes-nivoles
-$autoload = $base . '/backend/vendor/autoload.php';
-
-// A DECOMMENTER EN PROD
-//$autoload = __DIR__ . '/../vendor/autoload.php';
+$autoload = __DIR__ . '/../vendor/autoload.php';
 
 if (!file_exists($autoload)) {
     die(json_encode([
@@ -22,20 +17,15 @@ use Firebase\JWT\Key;
 $SECRET_KEY = "tetes-nivoles-super-secret-key-2026-ultra-secure-987654321";
 
 function getBearerToken() {
+    $auth = null;
 
-    $headers = getallheaders();
-
-    if (!$headers) {
-        $headers = [];
-    }
-
-    // Apache sometimes lowercases keys
-    $auth = $headers['Authorization']
-        ?? $headers['authorization']
-        ?? null;
-
-    if (!$auth && isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
         $auth = $_SERVER['HTTP_AUTHORIZATION'];
+    } elseif (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        $auth = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    } else {
+        $headers = getallheaders();
+        $auth = $headers['Authorization'] ?? $headers['authorization'] ?? null;
     }
 
     if (!$auth) return null;

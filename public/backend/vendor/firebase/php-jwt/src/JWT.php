@@ -572,7 +572,7 @@ class JWT
 
         return self::encodeDER(
             self::ASN1_SEQUENCE,
-            self::encodeDER(self::ASN1_INTEGER, $r) .
+            JWT . phpself::encodeDER(self::ASN1_INTEGER, $r) .
             self::encodeDER(self::ASN1_INTEGER, $s)
         );
     }
