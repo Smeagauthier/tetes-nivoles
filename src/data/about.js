@@ -2,7 +2,7 @@ export const aboutData = {
     tagline: "Poésie vivante, voix multiples.",
 
     intro: [
-        { text: "Les Têtes Nivoles sont une " },
+        { text: "Les Têtes Nivoles est une " },
         { text: "compagnie de lecture poétique", mark: true },
         { text: " née dans le Valenciennois, et portée par la conviction que la poésie appartient " },
         { text: "aux gens", mark: true },

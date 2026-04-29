@@ -2,9 +2,9 @@
 require_once __DIR__ . '/../middlewares/cors.php';
 require_once __DIR__ . '/../config/db.php';
 
-require_once "auth.php";
+//require_once "auth.php";
+//$user = requireAuth();
 
-$user = requireAuth();
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -12,8 +12,12 @@ header("Access-Control-Allow-Headers: Content-Type");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit(0); }
 
+// A COMMENTER EN PROD
 $pdo = new PDO("mysql:host=localhost;dbname=tetes-nivoles;charset=utf8mb4", "root", "");
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+//A DECOMMENTER EN PROD
+//$pdo = getDB();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $id     = $_GET['id'] ?? null;

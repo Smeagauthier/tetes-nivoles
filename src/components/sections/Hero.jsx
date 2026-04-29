@@ -57,7 +57,7 @@ export default function Hero() {
     if (!hero) return null;
 
     return (
-        <section id="hero" className="relative w-full h-screen overflow-hidden">
+        <section id="hero" className="relative w-full h-dvh overflow-hidden">
 
             <Swiper
                 loop={canLoop}

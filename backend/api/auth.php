@@ -1,8 +1,12 @@
 <?php
 $DEV_MODE = true;
-$base = dirname(__DIR__, 2); // remonte jusqu'à /tetes-nivoles
 
+// A COMMENTER EN PROD
+$base = dirname(__DIR__, 2); // remonte jusqu'à /tetes-nivoles
 $autoload = $base . '/backend/vendor/autoload.php';
+
+// A DECOMMENTER EN PROD
+//$autoload = __DIR__ . '/../vendor/autoload.php';
 
 if (!file_exists($autoload)) {
     die(json_encode([

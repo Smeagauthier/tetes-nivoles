@@ -126,14 +126,13 @@ export const authProvider = {
     login: async ({ username, password }) => {
         const res = await fetch(`${API_URL}/login.php`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
         });
 
         let data;
         try {
+            const text = await res.text();
             data = JSON.parse(text);
         } catch (e) {
             throw new Error("Invalid JSON from server");
@@ -144,7 +143,6 @@ export const authProvider = {
         }
 
         localStorage.setItem('token', data.token);
-
         return Promise.resolve();
     },
 

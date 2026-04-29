@@ -8,7 +8,7 @@ export default function ImageUploadInput({
                                              shape = 'square',
                                              preview = null,
                                              multiple = true,
-                                             type = 'members' // 👈 IMPORTANT (events / members / books)
+                                             type = 'members' // IMPORTANT (events / members / books)
                                          }) {
     const { field } = useInput({ source });
 
@@ -36,10 +36,16 @@ export default function ImageUploadInput({
         formData.append('file', file);
         formData.append('type', type); // IMPORTANT pour ton PHP
 
+        const token = localStorage.getItem('token');
+
+
         try {
             const res = await fetch(uploadPath, {
                 method: 'POST',
-                body: formData
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
             });
 
             const data = await res.json();

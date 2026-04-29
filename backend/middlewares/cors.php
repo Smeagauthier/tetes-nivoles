@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: https://tetes-nivoles.fr"); // ton domaine
+header("Access-Control-Allow-Origin: https://tetesnivoles.fr"); // ton domaine
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");

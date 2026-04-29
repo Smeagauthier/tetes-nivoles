@@ -208,6 +208,7 @@ export default function Members() {
     return (
         <section
             className="flex flex-col items-center px-6 md:px-16"
+            id="members"
             style={{
                 backgroundColor: COLORS.night,
                 paddingTop: "clamp(60px, 10vw, 140px)",

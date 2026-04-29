@@ -53,7 +53,15 @@ export default function Contact() {
         try {
             setLoading(true);
 
-            const res = await fetch("http://localhost:3001/api/contact", {
+            // A COMMENTER EN PROD
+            // const res = await fetch("http://localhost:3001/api/contact", {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify(form),
+            // });
+
+            //A DECOMMENTER EN PROD
+            const res = await fetch("/api/contact.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
