@@ -1,11 +1,11 @@
 <?php
-$env = parse_ini_file(__DIR__ . '/../../.env');
+$env = parse_ini_file(__DIR__ . '/../.env');
 
 function getDB() {
     static $pdo = null;
 
     if ($pdo === null) {
-        $env = parse_ini_file(__DIR__ . '/../../.env');
+        $env = parse_ini_file(__DIR__ . '/../.env');
 
         if (!$env) {
             echo json_encode(["error" => "env not loaded"]);

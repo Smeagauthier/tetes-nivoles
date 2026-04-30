@@ -3,8 +3,8 @@ require_once __DIR__ . '/../middlewares/cors.php';
 require_once __DIR__ . '/../config/db.php';
 
 //require_once "auth.php";
-//$user = requireAuth();
 
+//$user = requireAuth();
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -12,12 +12,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit(0); }
 
-// A COMMENTER EN PROD
-$pdo = new PDO("mysql:host=localhost;dbname=tetes-nivoles;charset=utf8mb4", "root", "");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-//A DECOMMENTER EN PROD
-//$pdo = getDB();
+$pdo = getDB();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $id     = $_GET['id'] ?? null;
@@ -111,10 +106,10 @@ try {
     // =========================
     elseif ($method === 'PUT') {
 
-    $body = json_decode(file_get_contents("php://input"), true);
+        $body = json_decode(file_get_contents("php://input"), true);
 
 
-    $stmt = $pdo->prepare("
+        $stmt = $pdo->prepare("
         UPDATE events SET
             title=?,
             description=?,
@@ -127,57 +122,57 @@ try {
         WHERE id=?
     ");
 
-    $stmt->execute([
-        $body['title'],
-        $body['description'] ?? null,
-        $body['location'] ?? null,
-        $body['event_date'],
-	!empty($body['is_published']) ? 1 : 0,
-        $body['price'] ?? null,
-        $body['booking_url'] ?? null,
-        $body['show_name'] ?? null,
-        $id
-    ]);
+        $stmt->execute([
+            $body['title'],
+            $body['description'] ?? null,
+            $body['location'] ?? null,
+            $body['event_date'],
+            !empty($body['is_published']) ? 1 : 0,
+            $body['price'] ?? null,
+            $body['booking_url'] ?? null,
+            $body['show_name'] ?? null,
+            $id
+        ]);
 
-    $pdo->prepare("DELETE FROM event_images WHERE event_id = ?")
-        ->execute([$id]);
+        $pdo->prepare("DELETE FROM event_images WHERE event_id = ?")
+            ->execute([$id]);
 
-    if (!empty($body['images']) && is_array($body['images'])) {
+        if (!empty($body['images']) && is_array($body['images'])) {
 
-        $imgStmt = $pdo->prepare("
+            $imgStmt = $pdo->prepare("
             INSERT INTO event_images (event_id, url, alt_text)
             VALUES (?, ?, ?)
         ");
 
-        foreach ($body['images'] as $img) {
+            foreach ($body['images'] as $img) {
 
-            $url = is_array($img) ? $img['url'] : $img;
+                $url = is_array($img) ? $img['url'] : $img;
 
-            $imgStmt->execute([
-                $id,
-                $url,
-                $img['alt_text'] ?? null
-            ]);
+                $imgStmt->execute([
+                    $id,
+                    $url,
+                    $img['alt_text'] ?? null
+                ]);
+            }
         }
-    }
 
-    echo json_encode(['id' => $id] + $body, JSON_UNESCAPED_UNICODE);
-}
+        echo json_encode(['id' => $id] + $body, JSON_UNESCAPED_UNICODE);
+    }
     // =========================
     // DELETE EVENT
     // =========================
-   elseif ($method === 'DELETE') {
+    elseif ($method === 'DELETE') {
 
-    // 1. supprimer images en base
-    $stmt = $pdo->prepare("DELETE FROM event_images WHERE event_id = ?");
-    $stmt->execute([$id]);
+        // 1. supprimer images en base
+        $stmt = $pdo->prepare("DELETE FROM event_images WHERE event_id = ?");
+        $stmt->execute([$id]);
 
-    // 2. supprimer event
-    $stmt = $pdo->prepare("DELETE FROM events WHERE id = ?");
-    $stmt->execute([$id]);
+        // 2. supprimer event
+        $stmt = $pdo->prepare("DELETE FROM events WHERE id = ?");
+        $stmt->execute([$id]);
 
-    echo json_encode(['id' => $id]);
-}
+        echo json_encode(['id' => $id]);
+    }
 
 } catch (PDOException $e) {
     http_response_code(500);

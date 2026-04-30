@@ -2,19 +2,20 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-
 export default defineConfig({
-  base:'/',
+  base: '/',
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost/tetes-nivoles-api',
+        target: 'http://localhost:8000',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/backend/api'),
       },
       '/uploads': {
-        target: 'http://localhost/tetes-nivoles-api/api',
+        target: 'http://localhost:8000',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/uploads/, '/backend/uploads'),
       },
     }
   }

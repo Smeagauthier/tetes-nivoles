@@ -1,7 +1,15 @@
 RewriteEngine On
+
+# Fix Authorization header (o2switch)
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+
+# Routing API vers backend
 RewriteRule ^api/(.*)$ backend/api/$1 [L,QSA]
+
+# SPA React — renvoie tout vers index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !^/uploads/
-RewriteRule . /index.html [L]
+RewriteCond %{REQUEST_URI} !^/backend/
+RewriteRule ^ index.html [L]

@@ -3,8 +3,8 @@ require_once __DIR__ . '/../middlewares/cors.php';
 require_once __DIR__ . '/../config/db.php';
 
 //require_once "auth.php";
-//$user = requireAuth();
 
+//$user = requireAuth();
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -12,12 +12,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit(0); }
 
-// A COMMENTER EN PROD
-$pdo = new PDO("mysql:host=localhost;dbname=tetes-nivoles;charset=utf8mb4", "root", "");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-//A DECOMMENTER EN PROD
-//$pdo = getDB();
+$pdo = getDB();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $id     = $_GET['id'] ?? null;
@@ -51,10 +46,10 @@ try {
         echo json_encode($body, JSON_UNESCAPED_UNICODE);
 
     } elseif ($method === 'PUT') {
-    $body = json_decode(file_get_contents("php://input"), true);
-    $stmt = $pdo->prepare("UPDATE members SET name=?, role=?, bio=?, photo=?, sort_order=? WHERE id=?");
-    $stmt->execute([$body['name'], $body['role'], $body['bio'], $body['photo'], $body['sort_order'] ?? 0, $id]);
-    echo json_encode($body, JSON_UNESCAPED_UNICODE);
+        $body = json_decode(file_get_contents("php://input"), true);
+        $stmt = $pdo->prepare("UPDATE members SET name=?, role=?, bio=?, photo=?, sort_order=? WHERE id=?");
+        $stmt->execute([$body['name'], $body['role'], $body['bio'], $body['photo'], $body['sort_order'] ?? 0, $id]);
+        echo json_encode($body, JSON_UNESCAPED_UNICODE);
 
     } elseif ($method === 'DELETE') {
         $stmt = $pdo->prepare("DELETE FROM members WHERE id = ?");

@@ -8,7 +8,7 @@ export default function ImageUploadInput({
                                              shape = 'square',
                                              preview = null,
                                              multiple = true,
-                                             type = 'members' // IMPORTANT (events / members / books)
+                                             type = 'members' // 👈 IMPORTANT (events / members / books)
                                          }) {
     const { field } = useInput({ source });
 

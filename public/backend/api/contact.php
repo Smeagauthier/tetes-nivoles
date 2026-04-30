@@ -3,11 +3,12 @@ require_once __DIR__ . '/../middlewares/cors.php';
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use http\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-$env = parse_ini_file(__DIR__ . '/../../.env');
+$env = parse_ini_file(__DIR__ . '/../.env');
 
 
 // =====================
@@ -107,7 +108,7 @@ try {
 
     $mail->isHTML(true);
     $mail->CharSet = 'UTF-8';
-    $mail->Subject = "=?UTF-8?B?" . base64_encode("🎭 Message des Têtes Nivoles - " . ($sujet ? $sujet : 'Sans sujet')) . "?=";
+    $mail->Subject = "=?UTF-8?B?" . base64_encode("🎭 Message du site des Têtes Nivoles - " . ($sujet ? $sujet : 'Sans sujet')) . "?=";
     $mail->Body    = "
         <div style='font-family:Arial,sans-serif;background:#070F2B;color:#fff;padding:20px;'>
             <h2 style='color:#CDA268;'>Nouveau message</h2>
