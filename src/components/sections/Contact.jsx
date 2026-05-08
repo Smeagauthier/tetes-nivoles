@@ -92,7 +92,7 @@ export default function Contact() {
     return (
         <section
             id="contact"
-            className="flex justify-center px-6 sm:px-10 md:px-16 py-20 md:py-32 bg-[#070F2B]"
+            className="flex justify-center px-6 sm:px-10 md:px-16 py-16 md:py-32 bg-[#070F2B]"
         >
             <div className="w-full max-w-7xl flex flex-col md:flex-row gap-12 md:gap-20">
 
@@ -121,8 +121,10 @@ export default function Contact() {
                         Entrons en contact
                     </h2>
 
-                    <p className="text-white/60 max-w-md leading-relaxed text-sm sm:text-base">
+                    <p className="text-white/60 max-w-md leading-relaxed text-sm sm:text-base text-justify">
                         Une question, un projet ou une collaboration ? Nous vous répondrons rapidement.
+                        <br/>
+                        Les informations envoyées via ce formulaire sont utilisées uniquement pour répondre à votre demande. Elles ne sont pas revendues ni utilisées à des fins marketing.
                     </p>
 
                     {/* SOCIALS */}
@@ -144,7 +146,7 @@ export default function Contact() {
                 {/* FORM */}
                 <form
                     onSubmit={handleSubmit}
-                    className="flex-1 flex flex-col gap-6 md:gap-8"
+                    className="flex-1 flex flex-col gap-6 md:gap-8 sm:mt-25"
                     noValidate
                 >
                     {/* NAME */}
@@ -233,6 +235,7 @@ export default function Contact() {
                                 disabled:opacity-50
                                 disabled:cursor-not-allowed
                                 whitespace-nowrap
+                                cursor-pointer
                             "
                             style={{
                                 backgroundColor: "transparent",

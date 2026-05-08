@@ -28,27 +28,25 @@ export default function MentionsLegales() {
                             Éditeur
                         </h2>
                         <p className="text-white/70 leading-relaxed text-sm">
-                            Prénom Nom<br />
-                            Adresse postale<br />
-                            Email : contact@monsite.com
+                            Association Les Têtes Nivoles <br />
+                            Email : lestetesnivoles@gmailcom
                         </p>
                     </section>
 
-                    {/* Hébergeur */}
                     <section className="space-y-3">
                         <h2 className="text-[#CDA268] uppercase tracking-[0.2em] text-xs font-medium">
                             Hébergeur
                         </h2>
                         <p className="text-white/70 leading-relaxed text-sm">
-                            Vercel Inc.<br />
-                            440 N Barranca Ave #4133, Covina, CA 91723, USA<br />
+                            O2Switch<br />
+                            Chem. des Pardiaux, 63000 Clermont-Ferrand, France<br />
                             <a
-                                href="https://vercel.com"
+                                href="https://www.o2switch.fr/?gad_source=1&gad_campaignid=23767720734&gbraid=0AAAAAD21va7Y-cppX0x1a6tQzmLaQryuQ&gclid=Cj0KCQjw8PDPBhCeARIsAOJwmWXAHwSTrZk7MQ5d6bpCzy2YQmrBIOeiwx77OYfNA-Vi3N9N9sYUyf4aAuqQEALw_wcB"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-[#CDA268]/70 hover:text-[#CDA268] transition-colors"
                             >
-                                vercel.com
+                                o2switch.fr
                             </a>
                         </p>
                     </section>
@@ -59,12 +57,21 @@ export default function MentionsLegales() {
                             Propriété intellectuelle
                         </h2>
                         <p className="text-white/70 leading-relaxed text-sm">
-                            L'ensemble du contenu de ce site (textes, images, design)
-                            est la propriété exclusive de l'éditeur. Toute reproduction
+                            L'ensemble du contenu de ce site (textes, design, logo) et la majorité des images
+                            sont la propriété exclusive de l'association Les Têtes Nivoles. Toute reproduction
                             est interdite sans autorisation préalable.
                         </p>
                     </section>
-
+                    <section className="space-y-3">
+                        <h2 className="text-[#CDA268] uppercase tracking-[0.2em] text-xs font-medium">
+                            Formulaire de contact
+                        </h2>
+                        <p className="text-white/70 leading-relaxed text-sm">
+                            Les informations collectées via le formulaire de contact
+                            sont utilisées uniquement pour répondre à vos demandes.
+                            Vous pouvez exercer vos droits en contactant : lestetesnivoles@gmail.com
+                        </p>
+                    </section>
                 </div>
 
                 {/* Footer mini */}

@@ -20,11 +20,29 @@ export default function Hero() {
     const images = heroData?.images ?? [];
     const canLoop = images.length > 1;
 
-    if (!heroData) return (
-        <div className="h-screen bg-black flex items-center justify-center text-white">
-            Aucun contenu disponible
-        </div>
-    );
+    if (loading) {
+        return (
+            <div className="absolute inset-0 bg-black flex items-center justify-center z-50">
+                <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="h-screen flex items-center justify-center text-white bg-black">
+                Erreur: {error}
+            </div>
+        );
+    }
+
+    if (!hero?.length || !hero[0]) {
+        return (
+            <div className="h-screen bg-black flex items-center justify-center text-white">
+                Aucun contenu disponible
+            </div>
+        );
+    }
 
     const resetAnimations = (realIndex) => {
         setActiveIndex(realIndex);
@@ -54,10 +72,8 @@ export default function Hero() {
             </div>
         );
 
-    if (!hero) return null;
-
     return (
-        <section id="hero" className="relative w-full h-dvh overflow-hidden">
+        <section id="hero" className="relative w-full h-dvh overflow-hidden -mb-px">
 
             <Swiper
                 loop={canLoop}
@@ -106,8 +122,8 @@ export default function Hero() {
 
                     <h1
                         data-aos="fade"
-                        data-aos-duration="1200"
-                        data-aos-easing="ease-out-quad"
+                        data-aos-duration="1400"
+                        data-aos-easing="ease-in-out"
                         className="calligraphy text-white leading-tight drop-shadow-2xl text-center md:text-left pt-28 sm:pt-32 md:pt-40"
                         style={{
                             fontSize: "clamp(2.2rem, 6vw, 5rem)",

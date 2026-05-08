@@ -6,6 +6,8 @@ import { useMembers } from "../../hooks/useMembers";
 import RichText from "../ui/RichText";
 import "swiper/css";
 
+import spfLogo from "../../assets/images/spf.png";
+
 const COLORS = {
     gold: "#CDA268",
     night: "#070F2B",
@@ -20,7 +22,7 @@ const AuthorCard = memo(function AuthorCard({ member }) {
 
     return (
         <motion.article
-            className="w-full max-w-7xl"
+            className="w-full max-w-7xl mb-10"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
@@ -47,40 +49,63 @@ const AuthorCard = memo(function AuthorCard({ member }) {
 
                 <div className="flex flex-col gap-5 flex-1 text-center md:text-left">
 
-                    <span
-                        className="text-xs sm:text-sm tracking-[0.4em] uppercase pt-5"
-                        style={{ color: COLORS.gold }}
-                    >
-                        {member.role}
-                    </span>
+                    <div className="flex flex-col gap-5 flex-1 text-center md:text-left">
 
-                    <h3
-                        className="text-white font-light tracking-widest uppercase"
-                        style={{ fontSize: "clamp(22px, 3vw, 40px)" }}
-                    >
-                        {member.name}
-                    </h3>
+                        <div className="flex flex-col items-center md:items-start gap-3 pt-5">
+        <span
+            className="text-xs sm:text-sm tracking-[0.4em] uppercase"
+            style={{ color: COLORS.gold }}
+        >
+            {member.role}
+        </span>
+                        </div>
 
-                    <div
-                        className="h-px mx-auto md:mx-0 transition-all duration-300"
-                        style={{
-                            backgroundColor: COLORS.gold,
-                            width: hovered ? "120px" : "48px",
-                        }}
-                    />
+                        <h3
+                            className="text-white font-light tracking-widest uppercase"
+                            style={{ fontSize: "clamp(22px, 3vw, 40px)" }}
+                        >
+                            {member.name}
+                        </h3>
 
-                    <p
-                        className="leading-relaxed text-justify"
-                        style={{
-                            color: "rgba(255,255,255,0.7)",
-                            fontSize: "clamp(16px, 1.3vw, 18px)",
-                            maxWidth: "560px",
-                        }}
-                    >
-                        {Array.isArray(member.bio)
-                            ? <RichText segments={member.bio} />
-                            : member.bio}
-                    </p>
+                        <div
+                            className="h-px mx-auto md:mx-0 transition-all duration-300"
+                            style={{
+                                backgroundColor: COLORS.gold,
+                                width: hovered ? "120px" : "48px",
+                            }}
+                        />
+
+                        <p
+                            className="leading-relaxed text-justify"
+                            style={{
+                                color: "rgba(255,255,255,0.7)",
+                                fontSize: "clamp(16px, 1.3vw, 18px)",
+                                maxWidth: "560px",
+                            }}
+                        >
+                            {Array.isArray(member.bio)
+                                ? <RichText segments={member.bio} />
+                                : member.bio}
+                        </p>
+
+                        <a href="https://www.societedespoetesfrancais.fr"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-3 group w-fit mt-2 mx-auto md:mx-0"
+                        title="Membre de la Société des Poètes Français"
+                        >
+                            <img
+                                src={spfLogo}
+                                alt="Société des Poètes Français"
+                                className="h-13 sm:h-17 object-contain opacity-50 group-hover:opacity-100 transition-all duration-300"
+                            />
+                            <span
+                                className="text-[10px] tracking-[0.15em] uppercase text-white/35 group-hover:text-white/80 transition-colors duration-300"
+                            >
+                                Membre de la société des Poètes Français
+                            </span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </motion.article>
@@ -130,7 +155,7 @@ const MemberCard = memo(function MemberCard({
                     className="absolute inset-0 transition-all duration-300"
                     style={{
                         background: hovered
-                            ? "rgba(7,15,43,0.92)"
+                            ? "rgba(7,15,43,0.05)"
                             : "rgba(7,15,43,0.65)",
                     }}
                 />
@@ -207,8 +232,8 @@ export default function Members() {
 
     return (
         <section
-            className="flex flex-col items-center px-6 md:px-16"
             id="members"
+            className="flex flex-col items-center px-6 md:px-16 -mb-px"
             style={{
                 backgroundColor: COLORS.night,
                 paddingTop: "clamp(60px, 10vw, 140px)",

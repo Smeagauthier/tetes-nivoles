@@ -35,7 +35,7 @@ export default function About() {
                 paddingTop: "clamp(60px, 10vw, 140px)",
                 paddingBottom: "clamp(60px, 10vw, 140px)",
             }}
-            className="flex justify-center px-6 sm:px-10 md:px-16"
+            className="flex justify-center px-6 sm:px-10 md:px-16 -mb-px"
         >
             <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-14 lg:gap-24 items-center">
 
@@ -85,7 +85,7 @@ export default function About() {
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
                 >
-                    <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
+                    <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg ">
 
                         <div
                             className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 w-full h-full"
@@ -99,12 +99,11 @@ export default function About() {
                         />
 
                         <p className="absolute bottom-2 right-2 z-20 text-[10px] sm:text-[12px] tracking-wide text-white/90">
-                            © La Voix du Nord
+                            © Sténia Leleux
                         </p>
 
                     </div>
                 </motion.div>
-
             </div>
         </section>
     );

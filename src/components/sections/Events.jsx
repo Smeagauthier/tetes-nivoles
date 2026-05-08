@@ -1,11 +1,12 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useEvents } from "../../hooks/useEvents";
-
 import { COLORS } from "../../constants/colors";
 import EventMeta from "../../components/events/EventMeta";
+import FilterYear from "../ui/FilterYear";
+import ExpandableText from "../ui/ExpendableText.jsx";
 
 const DEFAULT_EVENT_IMG = "/images/default-event.png";
 
@@ -13,117 +14,122 @@ function isPast(date) {
     return new Date(date) < new Date();
 }
 
-const fadeUp = {
-    hidden: { opacity: 0, y: 28 },
-    visible: (delay = 0) => ({
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.7, ease: "easeOut", delay },
-    }),
-};
-
 /* ===================== UPCOMING ===================== */
-
-function UpcomingCard({ event, index }) {
+function UpcomingCard({ event }) {
     return (
         <motion.article
-            className="bg-white/5 p-6 backdrop-blur-md rounded-xl"
+            className="
+                bg-white/5 backdrop-blur-md rounded-xl
+                p-4 sm:p-6
+                flex flex-col gap-3 sm:gap-4
+                w-full min-w-0
+                h-full
+            "
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.05 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
         >
-            <h3 className="text-lg uppercase tracking-widest" style={{ color: COLORS.gold }}>
+            <h3 className="text-base sm:text-lg uppercase tracking-widest text-[#CDA268] break-words">
                 {event.title}
             </h3>
 
             {event.show_name && (
-                <p className="text-xs uppercase tracking-[0.3em] text-white/60 mt-2">
+                <p className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-white/60 break-words">
                     {event.show_name}
                 </p>
             )}
 
-            <EventMeta event={event} />
+            {event.description && (
+                <div className="min-w-0 flex-1">
+                    <ExpandableText text={event.description} limit={160} />
+                </div>
+            )}
+
+            <div className="min-w-0">
+                <EventMeta event={event} showPrice={true} />
+            </div>
         </motion.article>
     );
 }
 
 /* ===================== ARCHIVE ===================== */
-
-function ArchiveCard({ event, index }) {
+function ArchiveCard({ event }) {
     const [open, setOpen] = useState(false);
-    const [expanded, setExpanded] = useState(false);
+    const [slideIndex, setSlideIndex] = useState(0);
 
     const slides = event.images?.map(i => ({ src: i.url })) || [];
     const coverUrl = event.images?.[0]?.url || DEFAULT_EVENT_IMG;
 
-    const shortDesc =
-        event.description?.length > 160
-            ? event.description.slice(0, 160).trim() + "…"
-            : event.description;
+    const MAX_THUMB = 4;
+    const visibleImgs = event.images?.slice(0, MAX_THUMB) || [];
+    const remaining = (event.images?.length || 0) - MAX_THUMB;
+
+    const openAt = (index) => {
+        setSlideIndex(index);
+        setOpen(true);
+    };
 
     return (
         <>
             <motion.article
+                layout
                 className="group relative border border-white/10 bg-white/5 backdrop-blur-md overflow-hidden rounded-xl"
                 initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
             >
-                {/* IMAGE */}
                 <div
                     className="h-56 relative overflow-hidden cursor-pointer"
-                    onClick={() => slides.length > 0 && setOpen(true)}
+                    onClick={() => slides.length > 0 && openAt(0)}
                 >
                     <img
                         src={coverUrl}
                         className="w-full h-full object-cover transition duration-700 group-hover:scale-105"
                         alt={event.title}
-                        loading="lazy"
                     />
-
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            background:
-                                "linear-gradient(to top, rgba(7,15,43,0.6), rgba(7,15,43,0.15))",
-                        }}
-                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#070F2B]/70 to-transparent" />
                 </div>
 
-                {/* CONTENT */}
-                <div className="p-6 flex flex-col gap-4">
+                <div className="p-6 flex flex-col gap-4 min-h-[280px]">
 
-                    <h3 className="uppercase tracking-widest" style={{ color: COLORS.gold }}>
+                    <h3 className="uppercase tracking-widest text-[#CDA268] line-clamp-2">
                         {event.title}
                     </h3>
 
-                    {/* DESCRIPTION (expandable conservé) */}
-                    <p className="text-sm text-white/70 leading-relaxed">
-                        {expanded ? event.description : shortDesc}
-                    </p>
-
-                    {event.description?.length > 160 && (
-                        <button
-                            onClick={() => setExpanded(v => !v)}
-                            className="text-xs uppercase tracking-[0.25em] border-b border-[#CDA268] text-[#CDA268] w-fit hover:opacity-80 transition"
-                        >
-                            {expanded ? "Réduire" : "En savoir plus"}
-                        </button>
+                    {event.description && (
+                        <ExpandableText text={event.description} limit={160} />
                     )}
 
-                    <EventMeta event={event} />
+                    <EventMeta event={event} showPrice={false} />
 
                     {event.images?.length > 1 && (
-                        <div className="flex gap-2 mt-2">
-                            {event.images.slice(0, 4).map((img, i) => (
-                                <img
-                                    key={i}
-                                    src={img.url}
-                                    onClick={() => setOpen(true)}
-                                    className="w-14 h-14 object-cover rounded cursor-pointer"
-                                    alt={event.title}
-                                />
-                            ))}
+                        <div className="flex gap-2 flex-wrap mt-2">
+                            {visibleImgs.map((img, i) => {
+                                const isLast = i === MAX_THUMB - 1 && remaining > 0;
+
+                                return (
+                                    <div
+                                        key={i}
+                                        className="relative w-14 h-14 cursor-pointer overflow-hidden rounded"
+                                        onClick={() => openAt(i)}
+                                    >
+                                        <img
+                                            src={img.url}
+                                            className="w-full h-full object-cover"
+                                        />
+
+                                        {isLast && (
+                                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                                <span className="text-white text-xs">
+                                                    +{remaining}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </div>
@@ -134,6 +140,8 @@ function ArchiveCard({ event, index }) {
                     open={open}
                     close={() => setOpen(false)}
                     slides={slides}
+                    index={slideIndex}
+                    controller={{ closeOnBackdropClick: true }}
                 />
             )}
         </>
@@ -141,80 +149,69 @@ function ArchiveCard({ event, index }) {
 }
 
 /* ===================== EMPTY STATE ===================== */
-
 function EmptyUpcoming() {
     return (
         <motion.div
             className="text-center py-12 px-6 border border-white/10 bg-white/5 rounded-xl"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
         >
             <p className="text-white/70 text-sm leading-relaxed max-w-xl mx-auto">
-                Aucun événement n’est prévu pour le moment.
-                De nouvelles dates seront annoncées prochainement, n’hésitez pas à revenir consulter cette page.
+                Aucun événement n'est prévu pour le moment.
             </p>
-
-            <motion.div
-                className="h-px w-24 mx-auto mt-6"
-                style={{ backgroundColor: COLORS.gold }}
-                initial={{ width: 0, opacity: 0 }}
-                whileInView={{ width: 96, opacity: 1 }}
-                transition={{ duration: 0.6 }}
-            />
         </motion.div>
     );
 }
 
 /* ===================== MAIN ===================== */
-
 export default function Events() {
     const { events, loading, error } = useEvents();
 
+    const [selectedYear, setSelectedYear] = useState(null);
     const [showMoreUpcoming, setShowMoreUpcoming] = useState(false);
     const [showMoreArchive, setShowMoreArchive] = useState(false);
 
-    const { upcoming, past } = useMemo(() => {
+    const { upcoming, past, archiveYears } = useMemo(() => {
         const published = events.filter(e => e.is_published);
 
-        return {
-            upcoming: published
-                .filter(e => !isPast(e.event_date))
-                .sort((a, b) => new Date(a.event_date) - new Date(b.event_date)),
+        const upcoming = published
+            .filter(e => !isPast(e.event_date))
+            .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
 
-            past: published
-                .filter(e => isPast(e.event_date))
-                .sort((a, b) => new Date(b.event_date) - new Date(a.event_date)),
-        };
+        const past = published
+            .filter(e => isPast(e.event_date))
+            .sort((a, b) => new Date(b.event_date) - new Date(a.event_date));
+
+        const years = [...new Set(past.map(e => new Date(e.event_date).getFullYear()))]
+            .sort((a, b) => b - a);
+
+        return { upcoming, past, archiveYears: years };
     }, [events]);
+
+    const filteredPast = selectedYear
+        ? past.filter(e => new Date(e.event_date).getFullYear() === selectedYear)
+        : past;
 
     if (loading || error) return null;
 
     const upcomingToShow = upcoming.slice(0, showMoreUpcoming ? upcoming.length : 3);
-    const pastToShow = past.slice(0, showMoreArchive ? past.length : 3);
+    const pastToShow = filteredPast.slice(0, showMoreArchive ? filteredPast.length : 3);
+
+    const canShowMoreArchive =
+        filteredPast.length > pastToShow.length;
+
+    const canShowMoreUpcoming = upcoming.length > upcomingToShow.length;
 
     return (
-        <section className="bg-[#070F2B] px-6 md:px-16 py-24" id="events">
+        <section id="events" className="bg-[#070F2B] px-6 md:px-16 py-16 md:py-24 -mb-px">
 
             {/* HEADER */}
-            <div className="max-w-7xl mx-auto flex flex-col gap-10 mb-16">
-                <header className="flex flex-col gap-4">
-                    <motion.p
-                        className="text-md uppercase tracking-[0.4em]"
-                        style={{ color: COLORS.gold }}
-                    >
-                        Nos spectacles
-                    </motion.p>
-
-                    <motion.div
-                        className="w-12 h-px"
-                        style={{ backgroundColor: COLORS.gold }}
-                        initial={{ opacity: 0, width: 0 }}
-                        whileInView={{ opacity: 1, width: 48 }}
-                        transition={{ duration: 0.6 }}
-                    />
-                </header>
+            <div className="max-w-7xl mx-auto mb-16">
+                <h2 className="text-[#CDA268] uppercase tracking-[0.4em]">
+                    Nos spectacles
+                </h2>
             </div>
 
             {/* UPCOMING */}
@@ -223,23 +220,52 @@ export default function Events() {
                     À venir
                 </h2>
 
-                {upcoming.length === 0 ? (
-                    <EmptyUpcoming />
-                ) : (
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {upcomingToShow.map((event, i) => (
-                            <UpcomingCard key={event.id} event={event} index={i} />
+                <motion.div
+                    layout
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch"
+                    transition={{
+                        layout: {
+                            duration: 0.6,
+                            ease: [0.22, 1, 0.36, 1]
+                        }
+                    }}
+                >
+                    <AnimatePresence mode="popLayout">
+                        {upcomingToShow.map((event) => (
+                            <motion.div
+                                key={event.id}
+                                layout
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.35 }}
+                            >
+                                <UpcomingCard event={event} />
+                            </motion.div>
                         ))}
-                    </div>
-                )}
+                    </AnimatePresence>
+                </motion.div>
 
-                {upcoming.length > 3 && (
-                    <div className="flex justify-center mt-10">
+                {canShowMoreUpcoming && (
+                    <div className="mt-10 flex justify-center">
                         <button
-                            onClick={() => setShowMoreUpcoming(v => !v)}
-                            className="text-[#CDA268] uppercase tracking-[0.25em] border-b border-[#CDA268]"
+                            onClick={() => {
+                                setShowMoreUpcoming(true);
+                            }}
+                            className="
+                                px-6 py-2
+                                border border-[#CDA268]
+                                text-[#CDA268]
+                                uppercase tracking-[0.25em]
+                                text-xs
+                                transition-all duration-300
+                                cursor-pointer
+                                hover:bg-[#CDA268]
+                                hover:text-white
+                                hover:scale-[1.02]
+                            "
                         >
-                            {showMoreUpcoming ? "Réduire" : "Voir plus"}
+                            Voir plus
                         </button>
                     </div>
                 )}
@@ -247,23 +273,66 @@ export default function Events() {
 
             {/* ARCHIVE */}
             <section className="max-w-7xl mx-auto">
-                <h2 className="text-white uppercase tracking-[0.4em] mb-6">
-                    Archives
-                </h2>
 
-                <div className="grid md:grid-cols-3 gap-6">
-                    {pastToShow.map((event, i) => (
-                        <ArchiveCard key={event.id} event={event} index={i} />
-                    ))}
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-white uppercase tracking-[0.4em]">
+                        Archives
+                    </h2>
+
+                    <FilterYear
+                        years={archiveYears}
+                        selectedYear={selectedYear}
+                        onSelectYear={(year) => {
+                            setSelectedYear(year);
+                            setShowMoreArchive(false);
+                        }}
+                    />
                 </div>
 
-                {past.length > 3 && (
-                    <div className="flex justify-center mt-10">
+                <motion.div
+                    layout
+                    className="grid md:grid-cols-3 gap-6"
+                    transition={{
+                        layout: {
+                            duration: 0.6,
+                            ease: [0.22, 1, 0.36, 1]
+                        }
+                    }}
+                >
+                    <AnimatePresence mode="popLayout">
+                        {pastToShow.map((event) => (
+                            <motion.div
+                                key={event.id}
+                                layout
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.35 }}
+                            >
+                                <ArchiveCard event={event} />
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
+
+                {canShowMoreArchive && (
+                    <div className="mt-10 flex justify-center">
                         <button
-                            onClick={() => setShowMoreArchive(v => !v)}
-                            className="text-[#CDA268] uppercase tracking-[0.25em] border-b border-[#CDA268]"
+                            onClick={() => setShowMoreArchive(true)}
+                            className="
+                                px-6 py-2
+                                border border-[#CDA268]
+                                text-[#CDA268]
+                                uppercase tracking-[0.25em]
+                                text-xs
+                                transition-all duration-300
+                                hover:bg-[#CDA268]
+                                hover:text-white
+                                hover:scale-[1.02]
+                                cursor-pointer
+                            "
                         >
-                            {showMoreArchive ? "Réduire" : "Voir plus"}
+                            Voir plus
                         </button>
                     </div>
                 )}
