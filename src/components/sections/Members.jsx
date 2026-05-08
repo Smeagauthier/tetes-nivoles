@@ -212,8 +212,8 @@ export default function Members() {
 
     if (loading || error) return null;
 
-    const author = members.find(m => m.id === 2);
-    const rest = members.filter(m => m.id !== 2);
+    const author = Array.isArray(members) ? members.find(m => m.id === 2) : null;
+    const rest = Array.isArray(members) ? members.filter(m => m.id !== 2) : [];
 
     const handleCardOpen = (isOpen) => {
         setIsAnyCardOpen(isOpen);

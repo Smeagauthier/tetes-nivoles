@@ -195,6 +195,7 @@ export default function Navbar() {
                 style={{
                     paddingTop: navHeight,
                     height: "100dvh",
+                    paddingBottom: "env(safe-area-inset-bottom, 50px)",
                     overflow: "hidden",
                     zIndex: 9998,
                 }}
@@ -225,7 +226,6 @@ export default function Navbar() {
                         </a>
                     ))}
                 </div>
-
             </div>
         </nav>
     );
