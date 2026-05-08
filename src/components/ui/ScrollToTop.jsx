@@ -9,11 +9,18 @@ export default function ScrollTopButton() {
     useEffect(() => {
         setMounted(true);
 
+        const getScroll = () =>
+            window.pageYOffset ||
+            document.documentElement.scrollTop ||
+            0;
+
         const onScroll = () => {
-            setVisible(window.scrollY > 400);
+            setVisible(getScroll() > 400);
         };
 
         window.addEventListener("scroll", onScroll);
+        onScroll();
+
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
@@ -29,7 +36,7 @@ export default function ScrollTopButton() {
             onClick={scrollToTop}
             aria-label="Retour en haut"
             className={`
-                fixed z-50
+                fixed z-9999
                 cursor-pointer
 
                 bottom-[calc(3rem+env(safe-area-inset-bottom))]

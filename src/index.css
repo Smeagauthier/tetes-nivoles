@@ -10,6 +10,7 @@
 
 body, html{
     height: 100%;
+    /*overflow-x: hidden;*/
 }
 
 input:-webkit-autofill,
@@ -19,6 +20,34 @@ select:-webkit-autofill {
     -webkit-text-fill-color: white !important;
     caret-color: white;
     transition: background-color 9999s ease-out 0s;
+}
+
+html.menu-open,
+body.menu-open {
+    overflow: hidden;
+    touch-action: none;
+}
+
+.img-overlay {
+    opacity: 0;
+}
+
+div:hover .img-overlay {
+    opacity: 1;
+}
+
+.RaMenuItemLink-root {
+    transition: all 0.2s ease;
+}
+
+.RaMenuItemLink-root:hover {
+    opacity: 1;
+    transform: translateX(2px);
+}
+
+.RaMenuItemLink-active {
+    background: rgba(205,162,104,0.08);
+    border-radius: 6px;
 }
 
 .is-on-gold {
@@ -84,17 +113,17 @@ html {
     animation: progress 5s linear forwards;
 }
 
-/* ── Écriture calligraphique ── */
-@keyframes write {
-    from {
-        clip-path: inset(0 100% 0 0);
-        opacity: 0.4;
-    }
-    to {
-        clip-path: inset(0 0% 0 0);
-        opacity: 1;
-    }
-}
+/*!* ── Écriture calligraphique ── *!*/
+/*@keyframes write {*/
+/*    from {*/
+/*        clip-path: inset(0 100% 0 0);*/
+/*        opacity: 0.4;*/
+/*    }*/
+/*    to {*/
+/*        clip-path: inset(0 0% 0 0);*/
+/*        opacity: 1;*/
+/*    }*/
+/*}*/
 
 .calligraphy {
     font-family: 'Pinyon Script', cursive;
@@ -116,4 +145,15 @@ mark {
     font-weight: 500;
     font-style: normal;
     color: rgba(255,255,255,0.7);
+}
+
+/*Admin*/
+.event-row {
+    border-radius: 10px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.event-row:hover {
+    background: rgba(205,162,104,0.06);
+    transform: translateY(-1px);
 }

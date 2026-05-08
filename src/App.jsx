@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Site from "./Site";
 import AdminApp from "./admin/AdminApp";
 import MentionsLegales from "./pages/MentionsLegales";
+import ScrollTopButton from "./components/ui/ScrollToTop";
 
 import MainLayout from "./components/layout/Layout";
 import AdminLayout from "./components/layout/AdminLayout";
@@ -14,6 +15,7 @@ export default function App() {
                     element={
                         <MainLayout>
                             <Site />
+                            <ScrollTopButton />
                         </MainLayout>
                     }
                 />
