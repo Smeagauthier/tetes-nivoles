@@ -81,98 +81,156 @@ export default function ImageUploadInput({
     };
 
     return (
-        <div style={{ marginBottom: 24, width: '100%' }}>
+        <div style={{ marginBottom: 28, width: '100%' }}>
 
             {/* LABEL */}
-            <p style={{
-                color: 'rgba(255,255,255,0.7)',
-                fontSize: 12,
+            <div style={{
                 marginBottom: 12,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
             }}>
-                {label}
-            </p>
+                <p style={{
+                    color: '#fff',
+                    fontSize: 12,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    opacity: 0.8
+                }}>
+                    {label}
+                </p>
 
-            {/* IMAGES PREVIEW */}
+                <span style={{
+                    fontSize: 11,
+                    color: 'rgba(205,162,104,0.8)'
+                }}>
+                {multiple ? 'Images multiples' : 'Image unique'}
+            </span>
+            </div>
+
+            {/* GRID IMAGES */}
             <div style={{
                 display: 'flex',
-                gap: 12,
+                gap: 14,
                 flexWrap: 'wrap',
                 marginBottom: 16
             }}>
+
                 {images.map((img, i) => {
                     const url = typeof img === 'string' ? img : img.url;
 
                     return (
-                        <div key={i} style={{ position: 'relative' }}>
+                        <div
+                            key={i}
+                            style={{
+                                position: 'relative',
+                                width: previewSize,
+                                height: previewSize,
+                                borderRadius: shape === 'circle' ? '50%' : 10,
+                                overflow: 'hidden',
+                                border: '1px solid rgba(205,162,104,0.3)',
+                                background: 'rgba(255,255,255,0.03)',
+                                transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={(e) =>
+                                e.currentTarget.style.transform = 'scale(1.02)'
+                            }
+                            onMouseLeave={(e) =>
+                                e.currentTarget.style.transform = 'scale(1)'
+                            }
+                        >
 
                             <img
                                 src={url}
                                 style={{
-                                    width: previewSize,
-                                    height: previewSize,
+                                    width: '100%',
+                                    height: '100%',
                                     objectFit: 'cover',
-                                    borderRadius: shape === 'circle' ? '50%' : 8,
-                                    border: '2px solid #CDA268'
                                 }}
                             />
 
-                            {/* replace image */}
-                            <label style={{
+                            {/* OVERLAY ACTIONS */}
+                            <div style={{
                                 position: 'absolute',
-                                bottom: 4,
-                                left: 4,
-                                background: '#000',
-                                color: '#CDA268',
-                                fontSize: 20,
-                                padding: '2px 6px',
-                                cursor: 'pointer'
-                            }}>
-                                {loadingIndex === i ? '...' : '✎'}
-                                <input
-                                    type="file"
-                                    hidden
-                                    onChange={(e) => handleFile(e, i)}
-                                />
-                            </label>
-
-                            {/* delete image */}
-                            <button
-                                onClick={() => removeImage(i)}
-                                style={{
-                                    position: 'absolute',
-                                    top: 4,
-                                    right: 4,
-                                    background: 'red',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: 4,
-                                    cursor: 'pointer',
-                                    width: 20,
-                                    height: 20,
-                                    fontSize: 15,
-                                    lineHeight: '18px'
-                                }}
+                                inset: 0,
+                                background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)',
+                                opacity: 0,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-end',
+                                padding: 8,
+                                transition: '0.2s'
+                            }}
+                                 className="img-overlay"
                             >
-                                ×
-                            </button>
+
+                                {/* replace */}
+                                <label style={{
+                                    background: 'rgba(0,0,0,0.7)',
+                                    color: '#CDA268',
+                                    fontSize: 14,
+                                    padding: '4px 8px',
+                                    borderRadius: 6,
+                                    cursor: 'pointer',
+                                    backdropFilter: 'blur(4px)'
+                                }}>
+                                    ✎
+                                    <input
+                                        type="file"
+                                        hidden
+                                        onChange={(e) => handleFile(e, i)}
+                                    />
+                                </label>
+
+                                {/* delete */}
+                                <button
+                                    onClick={() => removeImage(i)}
+                                    style={{
+                                        background: 'rgba(255,0,0,0.8)',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: 6,
+                                        cursor: 'pointer',
+                                        width: 26,
+                                        height: 26,
+                                        fontSize: 14,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                >
+                                    ×
+                                </button>
+
+                            </div>
 
                         </div>
                     );
                 })}
+
             </div>
 
-            {/* ADD IMAGE */}
+            {/* ADD BUTTON */}
             <label style={{
-                display: 'inline-block',
-                padding: '8px 16px',
-                border: '1px solid #CDA268',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '10px 14px',
+                border: '1px dashed rgba(205,162,104,0.6)',
                 color: '#CDA268',
                 cursor: 'pointer',
-                fontSize: 13,
-                borderRadius: 4
-            }}>
+                fontSize: 12,
+                borderRadius: 8,
+                transition: '0.2s',
+                background: 'rgba(205,162,104,0.03)'
+            }}
+                   onMouseEnter={(e) =>
+                       e.currentTarget.style.background = 'rgba(205,162,104,0.08)'
+                   }
+                   onMouseLeave={(e) =>
+                       e.currentTarget.style.background = 'rgba(205,162,104,0.03)'
+                   }
+            >
                 + Ajouter une image
                 <input
                     type="file"
@@ -183,7 +241,11 @@ export default function ImageUploadInput({
 
             {/* ERROR */}
             {error && (
-                <p style={{ color: 'red', fontSize: 12, marginTop: 8 }}>
+                <p style={{
+                    color: '#ff4d4f',
+                    fontSize: 12,
+                    marginTop: 10
+                }}>
                     {error}
                 </p>
             )}

@@ -1,6 +1,8 @@
 import { Admin, Resource, List } from 'react-admin';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 import frenchMessages from 'ra-language-french';
+import { useEffect } from 'react';
+
 
 import { dataProvider } from './dataProvider';
 import { adminTheme } from './adminTheme';
@@ -25,6 +27,13 @@ import EventCreate from './resources/events/EventCreate';
 import HeroListDraggable from './resources/heros/HeroList';
 import HeroEdit from './resources/heros/HeroEdit';
 import HeroCreate from './resources/heros/HeroCreate';
+
+import { AdminLayout } from './AdminLayout';
+import FaIcon from './components/FaIcon';
+
+import { faUsers, faBook, faCalendar, faStar } from '@fortawesome/free-solid-svg-icons';
+
+import CustomMenu from './components/CustomMenu';
 
 const i18nProvider = polyglotI18nProvider(() => frenchMessages, 'fr');
 
@@ -57,6 +66,7 @@ export const authProvider = {
         return Promise.resolve();
     },
 
+
     logout: () => {
         localStorage.removeItem('token');
         return Promise.resolve();
@@ -80,6 +90,7 @@ export const authProvider = {
     },
 
     getPermissions: () => Promise.resolve(),
+
 };
 
 const MemberListPage = () => (
@@ -107,6 +118,11 @@ const HeroListPage = () => (
 );
 
 export default function AdminApp() {
+
+    useEffect(() => {
+        document.title = "Administration - Les Têtes Nivoles";
+    }, []);
+
     return (
         <Admin
             dataProvider={dataProvider}
@@ -116,12 +132,16 @@ export default function AdminApp() {
             loginPage={<AdminLogin />}
             basename="/admin"
             disableTelemetry
+            menu={CustomMenu}
+            layout={AdminLayout}
+            title="Administration - Les Têtes Nivoles"
         >
             <Resource
                 name="heros"
                 list={HeroListPage}
                 edit={HeroEdit}
                 create={HeroCreate}
+                icon={() => <FaIcon icon={faStar} />}
                 options={{ label: 'Héros' }}
             />
 
@@ -130,6 +150,7 @@ export default function AdminApp() {
                 list={MemberListPage}
                 edit={MemberEdit}
                 create={MemberCreate}
+                icon={() => <FaIcon icon={faUsers} />}
                 options={{ label: 'Membres' }}
             />
 
@@ -138,6 +159,7 @@ export default function AdminApp() {
                 list={BookListPage}
                 edit={BookEdit}
                 create={BookCreate}
+                icon={() => <FaIcon icon={faBook} />}
                 options={{ label: 'Livres' }}
             />
 
@@ -146,6 +168,7 @@ export default function AdminApp() {
                 list={EventListPage}
                 edit={EventEdit}
                 create={EventCreate}
+                icon={() => <FaIcon icon={faCalendar} />}
                 options={{ label: 'Évènements' }}
             />
         </Admin>

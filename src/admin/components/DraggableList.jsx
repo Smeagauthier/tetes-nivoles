@@ -3,12 +3,49 @@ import { useListContext } from 'react-admin';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable, arrayMove } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import '../../index.css';
 
 const COLORS = { gold: '#CDA268' };
 
-// Row générique — reçoit les colonnes à afficher via renderRow
-function SortableRow({ id, item, renderRow, editPath }) {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+function StaticRow({ item, index, renderRow, editPath }) {
+    const [hover, setHover] = useState(false);
+    const isEven = index % 2 === 0;
+
+    return (
+        <div
+            style={{
+                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                borderRadius: '10px',
+                padding: '2px 0',
+                cursor: 'pointer',
+                transition: 'background-color 0.15s ease',
+                backgroundColor: hover
+                    ? 'rgba(205,162,104,0.06)'
+                    : isEven
+                        ? 'rgba(255,255,255,0.02)'
+                        : 'transparent',
+            }}
+            onClick={() => window.location.href = editPath(item)}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+        >
+            {renderRow(item, {}, index)}
+        </div>
+    );
+}
+
+function SortableRow({ id, item, index, renderRow, editPath }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging
+    } = useSortable({ id });
+
+    const isEven = index % 2 === 0;
+    const [hover, setHover] = useState(false);
 
     return (
         <div
@@ -17,18 +54,28 @@ function SortableRow({ id, item, renderRow, editPath }) {
                 transform: CSS.Transform.toString(transform),
                 transition,
                 borderBottom: '1px solid rgba(255,255,255,0.05)',
-                backgroundColor: isDragging ? 'rgba(205,162,104,0.1)' : 'transparent',
                 cursor: 'pointer',
+                borderRadius: '10px',
+                padding: '2px 0',
+
+                backgroundColor: isDragging
+                    ? 'rgba(205,162,104,0.12)'
+                    : hover
+                        ? 'rgba(205,162,104,0.06)'   // couleur au hover
+                        : isEven
+                            ? 'rgba(255,255,255,0.02)'  // alternance
+                            : 'transparent',
             }}
             onClick={() => window.location.href = editPath(item)}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
         >
-            {/* drag handle + colonnes métier */}
-            {renderRow(item, { attributes, listeners })}
+            {renderRow(item, { attributes, listeners }, index)}
         </div>
     );
 }
 
-export default function DraggableList({ reorderEndpoint, columns, renderRow, editPath }) {
+export default function DraggableList({ reorderEndpoint, columns, renderRow, editPath, header, draggable = true }) {
     const { data, isLoading } = useListContext();
     const [rows, setRows]     = useState([]);
     const sensors             = useSensors(useSensor(PointerSensor));
@@ -54,8 +101,12 @@ export default function DraggableList({ reorderEndpoint, columns, renderRow, edi
 
     return (
         <>
-            {/* Header */}
-            <div style={{
+            {/* Compteur / slot header */}
+            {header?.(rows)}
+
+            {/* Header colonnes */}
+            <div
+                style={{
                 display: 'grid',
                 gridTemplateColumns: columns.map(c => c.width).join(' '),
                 gap: '16px', padding: '8px 16px',
@@ -66,19 +117,35 @@ export default function DraggableList({ reorderEndpoint, columns, renderRow, edi
                 {columns.map(c => <span key={c.label}>{c.label}</span>)}
             </div>
 
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={rows.map(r => r.id)} strategy={verticalListSortingStrategy}>
-                    {rows.map(item => (
-                        <SortableRow
+            {draggable ? (
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={rows.map(r => r.id)} strategy={verticalListSortingStrategy}>
+                        {rows.map((item, index) => (
+                            <SortableRow
+                                key={item.id}
+                                id={item.id}
+                                item={item}
+                                index={index}
+                                renderRow={renderRow}
+                                editPath={editPath}
+                            />
+                        ))}
+                    </SortableContext>
+                </DndContext>
+            ) : (
+                /* Mode non-draggable : simple liste */
+                <div>
+                    {rows.map((item, index) => (
+                        <StaticRow
                             key={item.id}
-                            id={item.id}
                             item={item}
+                            index={index}
                             renderRow={renderRow}
                             editPath={editPath}
                         />
                     ))}
-                </SortableContext>
-            </DndContext>
+                </div>
+            )}
         </>
     );
 }
