@@ -121,7 +121,7 @@ export default function Navbar() {
                      * ml-auto → pousse les liens vers la droite
                      * mr-8    → espace entre les liens et les socials/CTA
                      */}
-                    <div className="hidden md:flex gap-16 ml-auto mr-40">
+                    <div className="hidden md:flex gap-8 lg:gap-12 xl:gap-16 absolute left-1/2 -translate-x-1/2 xl:translate-x-[-55%]">
                         {NAV_LINKS.map((link) => (
                             <a key={link.href} href={link.href}
                                onClick={(e) => { e.preventDefault(); handleNav(link.href); }}
@@ -216,7 +216,7 @@ export default function Navbar() {
                 </div>
 
                 {/* ── 2. LIENS — flex-1 centre verticalement ──────────────── */}
-                <div className="flex flex-col items-center gap-15 px-6 pt-20">
+                <div className="flex flex-col items-center gap-13 px-6 pt-15">
                     {NAV_LINKS.map((link, i) => (
                         <a key={link.href} href="#"
                            onClick={(e) => { e.preventDefault(); handleNav(link.href); }}
