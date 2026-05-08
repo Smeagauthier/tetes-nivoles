@@ -1,9 +1,9 @@
 import { Create } from 'react-admin';
-import HeroForm from './HeroForm.jsx';
+import HeroForm from './HeroForm';
 
 export default function HeroCreate() {
     return (
-        <Create>
+        <Create defaultValues={{ is_active: true }}>
             <HeroForm />
         </Create>
     );

@@ -2,6 +2,7 @@ import { SimpleForm, TextInput, NumberInput, DateTimeInput, BooleanInput } from 
 import ImageUploadInput from '../../components/ImageUploadInput';
 import BackButton from "../../components/BackButton.jsx";
 import { useRecordContext } from 'react-admin';
+import FieldHint from "../../components/FieldHint.jsx";
 
 function ImagesPreview() {
     const record = useRecordContext();
@@ -54,18 +55,28 @@ export default function EventForm() {
 
             {/* LIEU */}
             <TextInput source="location" label="Lieu" fullWidth />
+            <FieldHint>
+                Adresse ou lieu-dit présent sur Google Maps
+            </FieldHint>
 
             {/* DATE */}
             <DateTimeInput source="event_date" label="Date de l'événement" fullWidth />
+            <FieldHint>
+                Date et heure
+            </FieldHint>
 
             {/* PRIX */}
             <NumberInput source="price" label="Prix (€)" fullWidth />
+            <FieldHint>
+                Par défaut gratuit
+            </FieldHint>
 
             {/* BOOKING */}
-            <TextInput source="booking_url" label="Lien de réservation" fullWidth  name={"booking"}/>
+            <TextInput source="booking_url" label="Lien de réservation" fullWidth />
+            <FieldHint>
+                Tu peux mettre un lien, un numéro de téléphone ou un mail, le bouton s'adaptera
+            </FieldHint>
 
-            {/* PUBLISHED */}
-            <BooleanInput source="is_published" label="Publié" />
 
             {/* UPLOAD IMAGES (frontend simplifié) */}
             <ImageUploadInput
@@ -75,6 +86,15 @@ export default function EventForm() {
                 multiple
                 type="events"
             />
+            <FieldHint>
+                Formats acceptés : PNG, JPG, JPEG, WEBP et 5 Mo max. Ajoute des images que si l'event est passé
+            </FieldHint>
+
+            {/* PUBLISHED */}
+            <BooleanInput source="is_published" label="Publié" />
+            <FieldHint>
+                Indispensable pour afficher l'évent sur le site
+            </FieldHint>
 
         </SimpleForm>
     );
